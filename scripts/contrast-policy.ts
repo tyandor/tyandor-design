@@ -20,8 +20,31 @@ export interface Exemption {
   reason: string;
 }
 
-// TODO(policy): fill in — see the decision written up in the session notes.
-export const EXEMPTIONS: Exemption[] = [];
+/**
+ * Exemptions are promises about usage, not shrugs.
+ *
+ * Only WCAG-backed carve-outs live here. A pairing that is merely inconvenient
+ * belongs in the palette, not in this list — see the audit notes in the Phase 1
+ * commit for the clusters deliberately left failing.
+ */
+export const EXEMPTIONS: Exemption[] = [
+  {
+    fg: "text-disabled",
+    reason:
+      "WCAG 2.1 SC 1.4.3 exempts text in an inactive user-interface component " +
+      "by name. Promise: this role is used ONLY on genuinely disabled controls " +
+      "— never to grey down text that a user is still expected to read.",
+  },
+  {
+    fg: "border-subtle",
+    reason:
+      "WCAG 2.1 SC 1.4.11 covers boundaries required to identify a component or " +
+      "its state; a purely decorative divider is out of scope, and Carbon ships " +
+      "$border-subtle below 3:1 for the same reason. Promise: where a border is " +
+      "the ONLY thing distinguishing two regions or signalling state, use " +
+      "border-strong or border-interactive instead.",
+  },
+];
 
 export function isExempt(pair: Pair): boolean {
   return EXEMPTIONS.some(

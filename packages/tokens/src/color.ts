@@ -72,3 +72,37 @@ export type AccentName = keyof typeof accents;
 export const chartSeries = ["cyan", "amber", "teal", "flare", "ice", "green"] as const satisfies readonly AccentName[];
 
 export const palette = { backgrounds, foregrounds, accents, highlights } as const;
+
+/**
+ * UI-contrast variants ("-on-light" / "-on-dark", PLAN.md 1e + Open questions).
+ *
+ * The Expanse palette was tuned for syntax highlighting, where colours sit on a
+ * single known background and 3:1 is plenty. UI text has to clear 4.5:1 across a
+ * whole layer ramp, and the Earth variant in particular could not. These are the
+ * MINIMUM luminance shifts that clear WCAG AA, hue and saturation held constant —
+ * every one is within a couple of steps of its parent and none changes the
+ * colour's character. Flare stays orange rather than going brown.
+ *
+ * Syntax highlighting keeps the unmodified values above; only role tokens
+ * consume these. Per PLAN.md these should flow UPSTREAM into
+ * `expanse/palette-site/palette.js` as named variants, so the terminal and nvim
+ * generators can pick them up — until then, this block is a known point of
+ * palette drift and the one place the design system deviates from upstream.
+ */
+export const onLight = {
+  /** Subtle -> secondary/placeholder text. 3.74:1 -> 4.50:1 */
+  subtle: "#5f6d7b",
+  /** Muted -> border-strong. 2.45:1 -> 3.01:1 */
+  muted: "#788a9d",
+  /** Amber -> interactive/focus. 2.76:1 -> 3.00:1 */
+  amber: "#b0800b",
+  /** Cyan -> link. 4.28:1 -> 4.51:1 */
+  cyan: "#0a7686",
+  /** Flare -> support-warning, large/icon only. 2.83:1 -> 3.01:1 */
+  flare: "#cd700a",
+} as const;
+
+export const onDark = {
+  /** Muted -> border-strong on the upper MCRN layers. 2.90:1 -> 3.02:1 */
+  muted: "#2b6d7d",
+} as const;

@@ -59,7 +59,8 @@ to `:root:not([data-theme])`, so it stops matching once a choice exists.
 |---|---|---|
 | Layering | `--ty-background`, `--ty-layer-01/02`, `--ty-layer-hover`, `--ty-field` | Ordinal: each sits above the last |
 | Borders | `--ty-border-subtle/strong/interactive` | |
-| Text | `--ty-text-primary/secondary/placeholder/emphasis/on-color/disabled` | |
+| Text | `--ty-text-primary/secondary/placeholder/emphasis/disabled` | |
+| Labels on fills | `--ty-text-on-color`, `--ty-text-on-accent` | `on-color` for dark fills (error/success/info/hover), `on-accent` for light ones (amber, flare) |
 | Interactive | `--ty-interactive`, `--ty-link`, `--ty-focus` | Amber is the action colour |
 | Support | `--ty-support-error/warning/success/info` | |
 | Accents | `--ty-accent-amber` … `--ty-accent-void` | **Expressive use only** — charts, syntax, labels. Never UI chrome. |
@@ -92,3 +93,32 @@ bun run ci             # everything CI runs
 Upstream source of truth for the palette hexes is
 `expanse/palette-site/palette.js`. Colour changes belong there first; `src/color.ts`
 mirrors it, and `tokens.json` is the bridge back for the theme generators.
+
+### Accessibility
+
+`bun run check:contrast` measures all 198 foreground/surface pairings across both
+themes and fails CI on any unexempted result below WCAG AA. Two clusters are
+exempt, each on a WCAG carve-out rather than convenience — see
+[`scripts/contrast-policy.ts`](../../scripts/contrast-policy.ts), where every
+entry carries the usage promise it depends on.
+
+### Known palette drift
+
+Six role tokens use slightly shifted values (`onLight` / `onDark` in
+[`src/color.ts`](src/color.ts)) rather than their raw palette hexes. The Expanse
+palette was tuned for syntax highlighting on one known background; UI text has to
+clear 4.5:1 across a whole layer ramp, and Earth could not. Each shift is the
+minimum that clears AA with hue and saturation held constant:
+
+| Role | Palette | Tuned | Was → Now |
+|---|---|---|---|
+| `text-secondary`, `text-placeholder`, `icon-secondary` (Earth) | Subtle `#6a7a8a` | `#5f6d7b` | 3.74 → 4.50 |
+| `border-strong` (Earth) | Muted `#8a9aaa` | `#788a9d` | 2.45 → 3.01 |
+| `border-strong` (MCRN) | Muted `#2a6a7a` | `#2b6d7d` | 2.90 → 3.02 |
+| `interactive`, `focus`, `border-interactive` (Earth) | Amber `#b8860b` | `#b0800b` | 2.76 → 3.00 |
+| `link` (Earth) | Cyan `#0a7a8a` | `#0a7686` | 4.28 → 4.51 |
+| `support-warning` (Earth) | Flare `#d4740a` | `#cd700a` | 2.83 → 3.01 |
+
+Syntax highlighting keeps the unmodified values. These should flow upstream into
+`palette.js` as named variants so the terminal and nvim generators pick them up;
+until then this is the one place the system deviates from upstream.

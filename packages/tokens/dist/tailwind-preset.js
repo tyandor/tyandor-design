@@ -29,6 +29,7 @@ module.exports = {
         "text-emphasis": "rgb(var(--ty-text-emphasis-rgb) / <alpha-value>)",
         "text-disabled": "rgb(var(--ty-text-disabled-rgb) / <alpha-value>)",
         "text-on-color": "rgb(var(--ty-text-on-color-rgb) / <alpha-value>)",
+        "text-on-accent": "rgb(var(--ty-text-on-accent-rgb) / <alpha-value>)",
         "icon-primary": "rgb(var(--ty-icon-primary-rgb) / <alpha-value>)",
         "icon-secondary": "rgb(var(--ty-icon-secondary-rgb) / <alpha-value>)",
         "interactive": "rgb(var(--ty-interactive-rgb) / <alpha-value>)",
