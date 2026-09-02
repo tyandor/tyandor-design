@@ -1,0 +1,8 @@
+node_modules/
+.DS_Store
+*.log
+.next/
+.vercel/
+# NOTE: packages/*/dist is intentionally NOT ignored.
+# Consumers install via `github:tyandor/tyandor-design#path:packages/tokens`,
+# and git dependencies have no build step — dist must be committed.

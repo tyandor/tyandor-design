@@ -1,0 +1,19 @@
+{
+  "name": "@tyandor/tokens",
+  "version": "0.1.0",
+  "description": "Carbon's token taxonomy, the Expanse palette's values. The contract every tyandor project depends on.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": ["*.css"],
+  "files": ["dist", "src"],
+  "main": "./dist/tokens.json",
+  "exports": {
+    ".": "./src/index.ts",
+    "./tokens.css": "./dist/tokens.css",
+    "./tailwind-preset": "./dist/tailwind-preset.js",
+    "./tokens.json": "./dist/tokens.json"
+  },
+  "scripts": {
+    "build": "bun run build.ts"
+  }
+}

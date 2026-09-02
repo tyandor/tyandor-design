@@ -1,0 +1,17 @@
+{
+  "name": "tyandor-design",
+  "private": true,
+  "type": "module",
+  "workspaces": ["packages/*", "apps/*"],
+  "scripts": {
+    "build": "bun run --filter '*' build",
+    "check:contrast": "bun run scripts/check-contrast.ts",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "ci": "bun run typecheck && bun run build && bun run check:contrast && bun test"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.9.3"
+  }
+}
