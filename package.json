@@ -7,6 +7,7 @@
   "scripts": {
     "build": "bun run --filter '*' build",
     "check:contrast": "bun run scripts/check-contrast.ts",
+    "check:palette": "bun run scripts/check-palette-drift.ts",
     "test": "bun test",
     "typecheck": "tsc --noEmit",
     "ci": "bun run typecheck && bun run build && bun run check:contrast && bun test"

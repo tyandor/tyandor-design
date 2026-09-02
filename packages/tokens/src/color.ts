@@ -84,10 +84,12 @@ export const palette = { backgrounds, foregrounds, accents, highlights } as cons
  * colour's character. Flare stays orange rather than going brown.
  *
  * Syntax highlighting keeps the unmodified values above; only role tokens
- * consume these. Per PLAN.md these should flow UPSTREAM into
- * `expanse/palette-site/palette.js` as named variants, so the terminal and nvim
- * generators can pick them up — until then, this block is a known point of
- * palette drift and the one place the design system deviates from upstream.
+ * consume these.
+ *
+ * These have been flowed upstream into `expanse/palette-site/palette.js`, where
+ * each lives on its parent primitive as a `ui: { mcrn?, earth? }` field —
+ * `onLight` here is `ui.earth` there, `onDark` is `ui.mcrn`. palette.js remains
+ * the source of truth; `bun run check:palette` asserts the two agree.
  */
 export const onLight = {
   /** Subtle -> secondary/placeholder text. 3.74:1 -> 4.50:1 */

@@ -119,6 +119,14 @@ minimum that clears AA with hue and saturation held constant:
 | `link` (Earth) | Cyan `#0a7a8a` | `#0a7686` | 4.28 → 4.51 |
 | `support-warning` (Earth) | Flare `#d4740a` | `#cd700a` | 2.83 → 3.01 |
 
-Syntax highlighting keeps the unmodified values. These should flow upstream into
-`palette.js` as named variants so the terminal and nvim generators pick them up;
-until then this is the one place the system deviates from upstream.
+Syntax highlighting keeps the unmodified values. These have been flowed upstream
+into `expanse/palette-site/palette.js`, where each sits on its parent primitive as
+a `ui: { mcrn?, earth? }` field, so the terminal and nvim generators can pick them
+up. palette.js stays the source of truth:
+
+```bash
+bun run check:palette   # asserts this package and palette.js agree
+```
+
+That check is deliberately outside `bun run ci`, since it needs the expanse
+checkout alongside; it skips cleanly when the repo isn't present.
