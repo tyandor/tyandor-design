@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en" data-theme="mcrn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>@tyandor/fonts — specimen</title>
+<!-- Both packages, no import between them. They meet on the family name. -->
+<link rel="stylesheet" href="./dist/fonts.css">
+<link rel="stylesheet" href="../tokens/dist/tokens.css">
+<style>
+  body {
+    margin: 0; padding: var(--ty-spacing-07);
+    background: var(--ty-background); color: var(--ty-text-primary);
+    font-family: var(--ty-font-body); font-size: var(--ty-body-01-size);
+    line-height: var(--ty-body-01-line-height);
+  }
+  main { max-width: 68ch; margin: 0 auto; display: grid; gap: var(--ty-spacing-07); }
+  section { border-top: 1px solid var(--ty-border-subtle); padding-top: var(--ty-spacing-05); }
+  h1 { font-size: var(--ty-heading-04-size); margin: 0 0 var(--ty-spacing-05); }
+  h2 { font-size: var(--ty-heading-01-size); color: var(--ty-text-secondary);
+       margin: 0 0 var(--ty-spacing-04); font-weight: 500; }
+  .mono { font-family: var(--ty-font-mono); }
+  .row { display: grid; grid-template-columns: 7rem 1fr; gap: var(--ty-spacing-04);
+         align-items: baseline; margin-bottom: var(--ty-spacing-03); }
+  .label { color: var(--ty-text-secondary); font-size: var(--ty-code-01-size);
+           font-family: var(--ty-font-mono); }
+  code { font-family: var(--ty-font-mono); color: var(--ty-link); }
+  #report { font-family: var(--ty-font-mono); font-size: var(--ty-code-01-size);
+            white-space: pre; color: var(--ty-text-secondary); }
+  .ok { color: var(--ty-support-success); } .bad { color: var(--ty-support-error); }
+</style>
+</head>
+<body>
+<main>
+  <h1>iA Writer Duo &amp; Mono</h1>
+
+  <section>
+    <h2>Duo — weight axis (wght 400–700)</h2>
+    <div class="row"><span class="label">400</span><span style="font-weight:400">Ceres, Ganymede, Tycho Station</span></div>
+    <div class="row"><span class="label">500</span><span style="font-weight:500">Ceres, Ganymede, Tycho Station</span></div>
+    <div class="row"><span class="label">600</span><span style="font-weight:600">Ceres, Ganymede, Tycho Station</span></div>
+    <div class="row"><span class="label">700</span><span style="font-weight:700">Ceres, Ganymede, Tycho Station</span></div>
+    <div class="row"><span class="label">italic</span><span style="font-style:italic">Ceres, Ganymede, Tycho Station</span></div>
+  </section>
+
+  <section>
+    <h2>Mono — weight axis</h2>
+    <div class="row"><span class="label">400</span><span class="mono">const belt = await dock("tycho");</span></div>
+    <div class="row"><span class="label">700</span><span class="mono" style="font-weight:700">const belt = await dock("tycho");</span></div>
+    <div class="row"><span class="label">italic</span><span class="mono" style="font-style:italic">// a comment, set in italic</span></div>
+  </section>
+
+  <section>
+    <h2>SPCG — iA's letter-spacing axis (0–150)</h2>
+    <div class="row"><span class="label">0</span><span style="font-variation-settings:'SPCG' 0">illegible Illinois 0O1lI</span></div>
+    <div class="row"><span class="label">75</span><span style="font-variation-settings:'SPCG' 75">illegible Illinois 0O1lI</span></div>
+    <div class="row"><span class="label">150</span><span style="font-variation-settings:'SPCG' 150">illegible Illinois 0O1lI</span></div>
+  </section>
+
+  <section>
+    <h2>Coverage</h2>
+    <div class="row"><span class="label">latin</span><span>The quick brown fox — “curly”, ½ é ü ñ €</span></div>
+    <div class="row"><span class="label">latin-ext</span><span>Łódź, Ğüneş, Việt Nam, Čapek, ə</span></div>
+    <div class="row"><span class="label">dropped</span><span>Ελληνικά, Кириллица (falls back — by design)</span></div>
+    <div class="row"><span class="label">logo</span><span>∧ ∨ (absent upstream — see PROVENANCE.md)</span></div>
+  </section>
+
+  <section>
+    <h2>Loaded faces</h2>
+    <div id="report">measuring…</div>
+  </section>
+</main>
+
+<script type="module">
+// Measure rather than eyeball: compare rendered width against a monospace
+// control. A face that failed to load falls back and matches the control.
+const probe = (family, weight = 400, style = "normal") => {
+  const c = document.createElement("canvas").getContext("2d");
+  c.font = `${style} ${weight} 48px ${family}`;
+  return c.measureText("Handgloves 0123 illegible").width;
+};
+
+await document.fonts.ready;
+const control = probe("monospace");
+const rows = [];
+for (const [label, family] of [["Duo", '"iA Writer Duo", monospace'], ["Mono", '"iA Writer Mono", monospace']]) {
+  for (const [style, weight] of [["normal", 400], ["normal", 700], ["italic", 400]]) {
+    const w = probe(family, weight, style);
+    const loaded = Math.abs(w - control) > 0.5;
+    rows.push(`${(label + " " + weight + " " + style).padEnd(20)} ${w.toFixed(1).padStart(7)}px  ` +
+      (loaded ? "loaded" : "FALLBACK"));
+  }
+}
+const entries = [...document.fonts].map(f => `${f.family} ${f.style} ${f.weight} ${f.status}`);
+const bad = rows.filter(r => r.includes("FALLBACK")).length;
+document.getElementById("report").innerHTML =
+  `<span class="${bad ? "bad" : "ok"}">${bad ? bad + " face(s) FELL BACK" : "all faces loaded"}</span>\n` +
+  `control (monospace): ${control.toFixed(1)}px\n\n` + rows.join("\n") +
+  `\n\ndocument.fonts (${entries.length} rules):\n  ` + entries.join("\n  ");
+</script>
+</body>
+</html>

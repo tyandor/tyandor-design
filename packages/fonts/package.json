@@ -1,0 +1,28 @@
+{
+  "name": "@tyandor/fonts",
+  "version": "0.1.0",
+  "description": "iA Writer Duo and Mono, subsetted to woff2 and wired to the --ty-font-* token contract.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": ["*.css"],
+  "files": ["dist", "src", "LICENSE-OFL.md", "PROVENANCE.md"],
+  "main": "./dist/fonts.json",
+  "exports": {
+    ".": "./src/index.ts",
+    "./fonts.css": "./dist/fonts.css",
+    "./fonts.json": "./dist/fonts.json",
+    "./next": "./src/next.ts",
+    "./files/*": "./dist/files/*"
+  },
+  "peerDependencies": {
+    "next": ">=13.2"
+  },
+  "peerDependenciesMeta": {
+    "next": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "build": "bun run build.ts"
+  }
+}
