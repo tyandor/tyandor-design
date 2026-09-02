@@ -8,12 +8,24 @@
         "typescript": "^5.9.3",
       },
     },
+    "packages/fonts": {
+      "name": "@tyandor/fonts",
+      "version": "0.1.0",
+      "peerDependencies": {
+        "next": ">=13.2",
+      },
+      "optionalPeers": [
+        "next",
+      ],
+    },
     "packages/tokens": {
       "name": "@tyandor/tokens",
       "version": "0.1.0",
     },
   },
   "packages": {
+    "@tyandor/fonts": ["@tyandor/fonts@workspace:packages/fonts"],
+
     "@tyandor/tokens": ["@tyandor/tokens@workspace:packages/tokens"],
 
     "@types/bun": ["@types/bun@1.4.0", "", { "dependencies": { "bun-types": "1.4.0" } }, "sha512-K+lZULY23vRgK/CfTjFIV+tyifaNdSMlPh9j+6mQ/cLfpOznLyAuzgV/JQysyECpkBQLVMSyvjlr2fBUSA9wFQ=="],

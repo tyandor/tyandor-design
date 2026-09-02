@@ -12,7 +12,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          # Pinned, not `latest`. bun.lock is written by whichever bun runs
+          # `bun install`, and `--frozen-lockfile` below rejects a lockfile a
+          # different version would rewrite -- so `latest` lets an unrelated
+          # bun release break CI with no change to this repo. Bump this in the
+          # same commit as the lockfile it produces.
+          bun-version: 1.2.20
 
       - run: bun install --frozen-lockfile
 
