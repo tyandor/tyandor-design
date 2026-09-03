@@ -1,0 +1,79 @@
+/*
+ * design.tyandor.com — global styles.
+ *
+ * tokens.css comes first because Tailwind's theme block below reads --ty-*.
+ * Tailwind last so its own layers stay on top.
+ *
+ * fonts.css is deliberately NOT imported here. This app uses
+ * `@tyandor/fonts/next`, which generates its own @font-face rules through
+ * next/font/local; importing fonts.css too would ship the same faces twice
+ * (Tailwind 3 / vanilla-CSS consumers still need fonts.css — that's what
+ * that path is for).
+ */
+@import "@tyandor/tokens/tokens.css";
+@import "tailwindcss";
+
+/*
+ * Mirror the role tokens into Tailwind 4's theme so `bg-background`,
+ * `text-primary`, `border-subtle` etc. resolve to `var(--ty-*)` — meaning
+ * a data-theme swap on <html> repaints the whole tree with no rebuild.
+ * Only the roles a docs page actually reaches for; the rest stay as raw
+ * `var(--ty-*)` at the callsite.
+ */
+@theme {
+  --color-background: var(--ty-background);
+  --color-layer-01: var(--ty-layer-01);
+  --color-layer-02: var(--ty-layer-02);
+  --color-layer-hover: var(--ty-layer-hover);
+  --color-field: var(--ty-field);
+  --color-border-subtle: var(--ty-border-subtle);
+  --color-border-strong: var(--ty-border-strong);
+  --color-text-primary: var(--ty-text-primary);
+  --color-text-secondary: var(--ty-text-secondary);
+  --color-text-emphasis: var(--ty-text-emphasis);
+  --color-text-placeholder: var(--ty-text-placeholder);
+  --color-text-on-color: var(--ty-text-on-color);
+  --color-interactive: var(--ty-interactive);
+  --color-link: var(--ty-link);
+  --color-link-hover: var(--ty-link-hover);
+  --color-focus: var(--ty-focus);
+  --color-support-error: var(--ty-support-error);
+  --color-support-warning: var(--ty-support-warning);
+  --color-support-success: var(--ty-support-success);
+  --color-support-info: var(--ty-support-info);
+
+  /* Fonts are already wired via --ty-font-* by tokens.css + fonts.css;
+     Tailwind's `font-body` / `font-mono` utilities line up here. */
+  --font-body: var(--ty-font-body);
+  --font-mono: var(--ty-font-mono);
+}
+
+/*
+ * Baseline. The rest of the design is expressed through utilities.
+ * font-body is Duo; tokens.css sets --ty-font-body. We echo it on html
+ * so anything outside Tailwind's reach still lands on the right family.
+ */
+html, body {
+  background-color: var(--ty-background);
+  color: var(--ty-text-primary);
+  font-family: var(--ty-font-body);
+  font-feature-settings: "ss01", "cv01";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Consistent focus ring — Carbon's rule: use the focus role, 2px, offset. */
+*:focus-visible {
+  outline: 2px solid var(--ty-focus);
+  outline-offset: 2px;
+}
+
+/* Utility-friendly readout heading style used by section headers. */
+.readout-heading {
+  font-family: var(--ty-font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ty-text-secondary);
+}
