@@ -1,0 +1,57 @@
+/*
+ * Base conventions shared by every ty-* component.
+ *
+ * Everything below resolves through var(--ty-*), so a data-theme swap on
+ * <html> repaints the whole component layer with no rebuild — the same
+ * property the Tailwind @theme bridge in apps/docs relies on.
+ */
+
+:root {
+  /*
+   * Component-layer knobs. Deliberately NOT part of the --ty-* token
+   * contract: they describe how components are drawn, not what the design
+   * system's values are. Consumers may override them; nothing downstream
+   * (nvim themes, terminal themes) reads them.
+   */
+  --ty-ui-radius: 2px;
+  --ty-ui-border: 1px;
+}
+
+/*
+ * PLAN.md Phase 3: "visible focus ring on --ty-focus". One rule, one place,
+ * so the promise is auditable. Interactive components opt in by carrying
+ * `ty-focus-ring` alongside their own class.
+ */
+.ty-focus-ring:focus-visible {
+  outline: 2px solid var(--ty-focus);
+  outline-offset: 2px;
+  border-radius: inherit;
+}
+
+/* Screen-reader-only text (breadcrumb separators, icon-button labels). */
+.ty-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/*
+ * Motion opt-out. Every transition in this file goes through these two
+ * variables, so honouring the OS preference is a single override.
+ */
+.ty-transition {
+  transition-duration: var(--ty-duration-fast-02);
+  transition-timing-function: var(--ty-easing-standard-productive);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ty-transition {
+    transition-duration: 1ms;
+  }
+}

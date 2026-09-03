@@ -1,0 +1,47 @@
+/*
+ * Typography. The 12 type-scale classes (.ty-type-body-02 etc.) are
+ * GENERATED from @tyandor/tokens by build.ts and inserted above this file —
+ * if you are looking for them in source, they are in packages/tokens/src/type.ts.
+ *
+ * What lives here is everything the scale does not describe: colour role,
+ * family override, and the two prose-shaping helpers.
+ */
+
+/* Colour roles. `tone` on <Text>/<Heading> maps straight onto these. */
+.ty-tone-primary     { color: var(--ty-text-primary); }
+.ty-tone-secondary   { color: var(--ty-text-secondary); }
+.ty-tone-emphasis    { color: var(--ty-text-emphasis); }
+.ty-tone-placeholder { color: var(--ty-text-placeholder); }
+.ty-tone-disabled    { color: var(--ty-text-disabled); }
+.ty-tone-on-color    { color: var(--ty-text-on-color); }
+.ty-tone-link        { color: var(--ty-link); }
+.ty-tone-error       { color: var(--ty-support-error); }
+.ty-tone-warning     { color: var(--ty-support-warning); }
+.ty-tone-success     { color: var(--ty-support-success); }
+.ty-tone-info        { color: var(--ty-support-info); }
+.ty-tone-inherit     { color: inherit; }
+
+/* Family overrides. The scale already picks body vs mono per role; these
+   are for the cases where content, not role, decides (a serial number set
+   in Mono inside body copy). */
+.ty-font-body  { font-family: var(--ty-font-body); }
+.ty-font-mono  { font-family: var(--ty-font-mono); }
+.ty-font-prose { font-family: var(--ty-font-prose); }
+
+/*
+ * `measure` on <Text> reuses the .ty-measure utility that tokens.css already
+ * ships (65ch — Duo is duospace and runs wide). Deliberately not redefined
+ * here; build.ts fails the build if this file shadows a tokens.css class.
+ */
+
+/*
+ * The MCRN flourish: terminal-style status lines. Uppercase, tracked out,
+ * Mono. Used by section eyebrows and the Readout family (milestone 7).
+ */
+.ty-readout {
+  font-family: var(--ty-font-mono);
+  font-size: var(--ty-code-01-size);
+  font-weight: var(--ty-weight-medium);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}

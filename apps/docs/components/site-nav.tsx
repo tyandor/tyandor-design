@@ -1,32 +1,51 @@
+"use client";
+
 import Link from "next/link";
-import { ThemeToggle } from "./theme-toggle";
+import { usePathname } from "next/navigation";
+import { Header, HeaderBrand, HeaderLink, ThemeToggle } from "@tyandor/ui";
 
 const links = [
   { href: "/foundations/color", label: "Color" },
   { href: "/foundations/typography", label: "Typography" },
   { href: "/foundations/spacing", label: "Spacing" },
+  { href: "/components", label: "Components" },
   { href: "/usage", label: "Usage" },
 ] as const;
 
+/**
+ * The site shell, now assembled from @tyandor/ui rather than hand-rolled
+ * Tailwind — the docs site is the system's first consumer, so anything it
+ * still styles by hand is a gap in the component inventory.
+ *
+ * `as={Link}` is why the package never imports next/link: it keeps client-side
+ * navigation here without making @tyandor/ui unusable outside Next.
+ */
 export function SiteNav() {
+  const pathname = usePathname();
   return (
-    <header className="sticky top-0 z-30 border-b border-border-subtle bg-background/85 backdrop-blur-sm">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-3">
-        <Link href="/" className="flex items-center gap-2 no-underline">
-          <span aria-hidden className="font-mono text-interactive">{">_"}</span>
-          <span className="font-mono text-[13px] tracking-widest uppercase text-text-primary">
+    <Header
+      blur
+      maxWidth="72rem"
+      brand={
+        <HeaderBrand as={Link} href="/">
+          <span aria-hidden className="text-interactive">{">_"}</span>
+          <span>
             Tyandor <span className="text-text-secondary">design</span>
           </span>
-        </Link>
-        <nav aria-label="Primary" className="hidden gap-5 font-mono text-[13px] sm:flex">
-          {links.map((l) => (
-            <Link key={l.href} href={l.href} className="text-text-secondary hover:text-text-primary no-underline">
-              {l.label}
-            </Link>
-          ))}
-        </nav>
-        <ThemeToggle />
-      </div>
-    </header>
+        </HeaderBrand>
+      }
+      nav={links.map((l) => (
+        <HeaderLink
+          key={l.href}
+          as={Link}
+          href={l.href}
+          active={pathname.startsWith(l.href)}
+          className="max-sm:hidden"
+        >
+          {l.label}
+        </HeaderLink>
+      ))}
+      actions={<ThemeToggle />}
+    />
   );
 }

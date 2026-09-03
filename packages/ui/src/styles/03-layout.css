@@ -1,0 +1,68 @@
+/*
+ * Layout primitives: Stack and Grid.
+ *
+ * Both take their variable axis (gap, column count) through a scoped custom
+ * property set inline by the component, rather than through a class per
+ * value. Thirteen spacing steps x two directions x two components is 52
+ * classes nobody wants to ship; one variable is the same thing, smaller.
+ * The inline value is always `var(--ty-spacing-NN)`, never a raw length, so
+ * the token contract still holds at the callsite.
+ */
+
+.ty-stack {
+  display: flex;
+  gap: var(--ty-stack-gap, var(--ty-spacing-05));
+  min-width: 0;
+}
+
+.ty-stack--vertical   { flex-direction: column; }
+.ty-stack--horizontal { flex-direction: row; }
+
+/* Horizontal stacks wrap by default: a row of pills or tags on a narrow
+   viewport should reflow, not overflow. Opt out with `wrap={false}`. */
+.ty-stack--wrap   { flex-wrap: wrap; }
+.ty-stack--nowrap { flex-wrap: nowrap; }
+
+.ty-stack--align-start    { align-items: flex-start; }
+.ty-stack--align-center   { align-items: center; }
+.ty-stack--align-end      { align-items: flex-end; }
+.ty-stack--align-baseline { align-items: baseline; }
+.ty-stack--align-stretch  { align-items: stretch; }
+
+.ty-stack--justify-start   { justify-content: flex-start; }
+.ty-stack--justify-center  { justify-content: center; }
+.ty-stack--justify-end     { justify-content: flex-end; }
+.ty-stack--justify-between { justify-content: space-between; }
+
+/*
+ * Grid. Named .ty-grid-layout, NOT .ty-grid — tokens.css already owns
+ * .ty-grid for the canonical 16-column fluid 2x grid, and silently
+ * redefining it would change behaviour for vanilla-CSS consumers who never
+ * installed this package.
+ */
+.ty-grid-layout {
+  display: grid;
+  gap: var(--ty-grid-layout-gap, var(--ty-spacing-06));
+  grid-template-columns: repeat(var(--ty-grid-layout-columns, 1), minmax(0, 1fr));
+  min-width: 0;
+}
+
+/* auto-fit track sizing, set when the component gets `minItemWidth`. */
+.ty-grid-layout--auto {
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(var(--ty-grid-layout-min, 16rem), 100%), 1fr)
+  );
+}
+
+/*
+ * Fixed column counts collapse to a single column below Carbon's md
+ * breakpoint (672px). A 4-up card grid on a phone is four slivers; one
+ * column is the only honest answer, and baking it in means no consumer has
+ * to remember to do it.
+ */
+@media (max-width: 41.999rem) {
+  .ty-grid-layout:not(.ty-grid-layout--auto) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

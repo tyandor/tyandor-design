@@ -1,0 +1,30 @@
+{
+  "name": "@tyandor/ui",
+  "version": "0.1.0",
+  "description": "Themed components for the tyandor design system. Radix-free where semantics suffice, styled only with --ty-* tokens.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": ["*.css"],
+  "files": ["dist", "src"],
+  "main": "./dist/ui.css",
+  "exports": {
+    ".": "./src/index.ts",
+    "./ui.css": "./dist/ui.css"
+  },
+  "dependencies": {
+    "@tyandor/tokens": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "scripts": {
+    "build": "bun run build.ts"
+  }
+}

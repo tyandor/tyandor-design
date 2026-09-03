@@ -1,9 +1,12 @@
 /** @type {import('next').NextConfig} */
-// PLAN.md phase 2: @tyandor/fonts ships raw TS (src/next.ts) so Next has to
-// transpile it here. The alternative -- pre-building to JS -- breaks
-// next/font/local, which parses its arguments straight out of the AST.
+// Both workspace packages ship raw TS/TSX rather than pre-built JS, so Next
+// transpiles them here.
+//   @tyandor/fonts: pre-building breaks next/font/local, which parses its
+//     arguments straight out of the AST.
+//   @tyandor/ui: shipping source keeps the package free of a bundler, and
+//     lets consumers' own compilers decide the target.
 const nextConfig = {
-  transpilePackages: ["@tyandor/fonts"],
+  transpilePackages: ["@tyandor/fonts", "@tyandor/ui"],
   reactStrictMode: true,
   poweredByHeader: false,
 };

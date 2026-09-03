@@ -1,0 +1,232 @@
+/*
+ * Navigation: Header, Footer, Breadcrumb, Pill.
+ *
+ * Depth here is layer colour plus border-subtle, never shadow — on MCRN's
+ * #050910 a drop shadow is invisible, so the design system expresses
+ * elevation the way the palette can actually render it.
+ */
+
+/* ── Header ───────────────────────────────────────────────────────── */
+
+.ty-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  width: 100%;
+  border-bottom: var(--ty-ui-border) solid var(--ty-border-subtle);
+  background-color: var(--ty-background);
+}
+
+/* Translucent only where the browser can actually blur behind it —
+   otherwise the header would wash out over scrolled content. */
+@supports (backdrop-filter: blur(8px)) {
+  .ty-header--blur {
+    background-color: rgba(var(--ty-background-rgb), 0.8);
+    backdrop-filter: blur(8px);
+  }
+}
+
+/*
+ * Content width is the consumer's call, not the system's — a docs site
+ * centres on a 6xl column, a marketing page runs full-bleed. The `maxWidth`
+ * prop sets this variable; unset means full width.
+ */
+.ty-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ty-spacing-06);
+  height: var(--ty-size-lg);
+  padding-inline: var(--ty-spacing-06);
+  max-width: var(--ty-container-max, none);
+  margin-inline: auto;
+}
+
+.ty-header__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ty-spacing-03);
+  color: var(--ty-text-emphasis);
+  font-family: var(--ty-font-mono);
+  font-size: var(--ty-code-02-size);
+  font-weight: var(--ty-weight-semibold);
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+
+.ty-header__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--ty-spacing-06);
+}
+
+.ty-header__link {
+  color: var(--ty-text-secondary);
+  font-size: var(--ty-body-01-size);
+  text-decoration: none;
+  transition-property: color;
+}
+
+.ty-header__link:hover { color: var(--ty-text-primary); }
+
+/* aria-current is the accessibility contract for "you are here"; styling it
+   directly means the visual state can never drift from the announced one. */
+.ty-header__link[aria-current] {
+  color: var(--ty-text-primary);
+}
+
+/* ── Footer ───────────────────────────────────────────────────────── */
+
+.ty-footer {
+  border-top: var(--ty-ui-border) solid var(--ty-border-subtle);
+  background-color: var(--ty-background);
+  padding-block: var(--ty-spacing-09);
+  padding-inline: var(--ty-spacing-06);
+  color: var(--ty-text-secondary);
+  font-size: var(--ty-body-01-size);
+}
+
+.ty-footer__inner {
+  max-width: var(--ty-container-max, none);
+  margin-inline: auto;
+}
+
+.ty-footer__columns {
+  display: grid;
+  gap: var(--ty-spacing-08);
+  grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
+}
+
+.ty-footer__heading {
+  margin-bottom: var(--ty-spacing-04);
+  color: var(--ty-text-secondary);
+  font-family: var(--ty-font-mono);
+  font-size: var(--ty-code-01-size);
+  font-weight: var(--ty-weight-medium);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ty-footer__baseline {
+  margin-top: var(--ty-spacing-08);
+  padding-top: var(--ty-spacing-06);
+  border-top: var(--ty-ui-border) solid var(--ty-border-subtle);
+  color: var(--ty-text-placeholder);
+  font-size: var(--ty-code-01-size);
+}
+
+/* ── Breadcrumb ───────────────────────────────────────────────────── */
+
+.ty-breadcrumb__list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ty-spacing-03);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--ty-body-01-size);
+}
+
+.ty-breadcrumb__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ty-spacing-03);
+}
+
+.ty-breadcrumb__link {
+  color: var(--ty-link);
+  text-decoration: none;
+  transition-property: color;
+}
+
+.ty-breadcrumb__link:hover {
+  color: var(--ty-link-hover);
+  text-decoration: underline;
+}
+
+.ty-breadcrumb__current { color: var(--ty-text-secondary); }
+
+/* Separator is decorative and aria-hidden; the list semantics carry the
+   structure for assistive tech. */
+.ty-breadcrumb__separator {
+  color: var(--ty-text-placeholder);
+  font-family: var(--ty-font-mono);
+  user-select: none;
+}
+
+/* ── Pill (category filters) ──────────────────────────────────────── */
+
+.ty-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ty-spacing-02);
+  height: var(--ty-size-sm);
+  padding-inline: var(--ty-spacing-05);
+  border: var(--ty-ui-border) solid var(--ty-border-subtle);
+  border-radius: calc(var(--ty-size-sm) / 2);
+  background-color: var(--ty-layer-01);
+  color: var(--ty-text-secondary);
+  font-family: var(--ty-font-mono);
+  font-size: var(--ty-code-01-size);
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  cursor: pointer;
+  transition-property: color, background-color, border-color;
+}
+
+.ty-pill:hover {
+  background-color: var(--ty-layer-hover);
+  color: var(--ty-text-primary);
+}
+
+.ty-pill[aria-pressed="true"],
+.ty-pill[aria-current="page"] {
+  border-color: var(--ty-border-interactive);
+  background-color: var(--ty-interactive);
+  color: var(--ty-text-on-color);
+}
+
+.ty-pill[aria-disabled="true"] {
+  border-color: var(--ty-border-subtle);
+  background-color: var(--ty-layer-01);
+  color: var(--ty-text-disabled);
+  cursor: not-allowed;
+}
+
+.ty-pill__count {
+  color: inherit;
+  opacity: 0.7;
+}
+
+/* ── Theme toggle ─────────────────────────────────────────────────── */
+
+.ty-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--ty-spacing-01);
+  border: var(--ty-ui-border) solid var(--ty-border-subtle);
+  border-radius: var(--ty-ui-radius);
+  background-color: var(--ty-layer-01);
+}
+
+.ty-theme-toggle__option {
+  padding: var(--ty-spacing-02) var(--ty-spacing-04);
+  border: 0;
+  border-radius: var(--ty-ui-radius);
+  background-color: transparent;
+  color: var(--ty-text-secondary);
+  font-family: var(--ty-font-mono);
+  font-size: var(--ty-code-01-size);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition-property: color, background-color;
+}
+
+.ty-theme-toggle__option:hover { color: var(--ty-text-primary); }
+
+.ty-theme-toggle__option[aria-checked="true"] {
+  background-color: var(--ty-interactive);
+  color: var(--ty-text-on-color);
+}

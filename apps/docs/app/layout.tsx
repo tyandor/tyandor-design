@@ -3,7 +3,7 @@ import "./globals.css";
 import { fontVariables } from "@tyandor/fonts/next";
 import { SiteFooter } from "../components/site-footer";
 import { SiteNav } from "../components/site-nav";
-import { ThemeProvider, themeInitScript } from "../components/theme-provider";
+import { ThemeProvider, themeScript } from "@tyandor/ui";
 
 export const metadata: Metadata = {
   title: {
@@ -25,8 +25,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           first paint already matches their preference. `system` is
           represented by the absence of data-theme — tokens.css handles the
           media-query fallback on its own.
+
+          Shipped by @tyandor/ui rather than written here: the script and
+          the provider have to agree on the storage key and on what "system"
+          means, and splitting them across packages is how they drift.
         */}
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script dangerouslySetInnerHTML={{ __html: themeScript() }} />
       </head>
       <body className="min-h-svh bg-background text-text-primary antialiased">
         <ThemeProvider>

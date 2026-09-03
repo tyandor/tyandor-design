@@ -2,16 +2,17 @@
   "name": "@tyandor/docs",
   "version": "0.0.0",
   "private": true,
-  "description": "design.tyandor.com — the token system's living reference. First consumer of @tyandor/tokens and @tyandor/fonts.",
+  "description": "design.tyandor.com \u2014 the token system's living reference. First consumer of @tyandor/tokens and @tyandor/fonts.",
   "type": "module",
   "scripts": {
     "dev": "next dev -p 4310",
     "build": "next build",
-    "start": "next start"
+    "start": "next start -p 4310"
   },
   "dependencies": {
     "@tyandor/fonts": "workspace:*",
     "@tyandor/tokens": "workspace:*",
+    "@tyandor/ui": "workspace:*",
     "next": "^15.5.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
