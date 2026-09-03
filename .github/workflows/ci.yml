@@ -24,21 +24,26 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
-      - name: Build tokens
-        run: bun run build
+      - name: Build packages
+        run: bun run build:packages
 
       - name: dist must be committed
         # Consumers install via github:tyandor/tyandor-design#path:packages/tokens,
         # and git dependencies have no build step. A stale dist ships broken tokens.
         run: |
           if ! git diff --quiet -- packages/*/dist; then
-            echo "::error::dist/ is out of date. Run 'bun run build' and commit the result."
+            echo "::error::dist/ is out of date. Run 'bun run build:packages' and commit the result."
             git diff --stat -- packages/*/dist
             exit 1
           fi
 
       - name: Contrast gate (WCAG AA)
         run: bun run check:contrast
+
+      - name: Build docs
+        # Verification-only: catches type errors, missing tokens, broken imports.
+        # Deployment goes through the `vercel` CLI; CI does not push to Vercel.
+        run: bun run build:docs
 
       - name: Test
         run: bun test
