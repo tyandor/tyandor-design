@@ -1,0 +1,2 @@
+# Subsetted webfonts: binary, and never worth a textual diff.
+*.woff2 binary -diff
