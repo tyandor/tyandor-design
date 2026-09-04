@@ -1,7 +1,8 @@
 /*
  * design.tyandor.com — global styles.
  *
- * tokens.css comes first because Tailwind's theme block below reads --ty-*.
+ * tokens.css comes first because Tailwind's theme block below reads --ty-*,
+ * and because ui.css resolves every value through those same variables.
  * Tailwind last so its own layers stay on top.
  *
  * fonts.css is deliberately NOT imported here. This app uses
@@ -11,6 +12,7 @@
  * that path is for).
  */
 @import "@tyandor/tokens/tokens.css";
+@import "@tyandor/ui/ui.css";
 @import "tailwindcss";
 
 /*

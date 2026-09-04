@@ -17,7 +17,8 @@ export default function UsagePage() {
         <CodeBlock language="json">{`{
   "dependencies": {
     "@tyandor/tokens": "github:tyandor/tyandor-design#path:packages/tokens",
-    "@tyandor/fonts":  "github:tyandor/tyandor-design#path:packages/fonts"
+    "@tyandor/fonts":  "github:tyandor/tyandor-design#path:packages/fonts",
+    "@tyandor/ui":     "github:tyandor/tyandor-design#path:packages/ui"
   }
 }`}</CodeBlock>
       </Section>
@@ -90,6 +91,59 @@ export default function RootLayout({ children }) {
     </html>
   );
 }`}</CodeBlock>
+      </Section>
+
+      <Section
+        title="Components"
+        desc="@tyandor/ui ships plain CSS classes, not Tailwind utilities."
+      >
+        <p className="mb-4 max-w-2xl text-sm text-text-secondary">
+          Utility classes would make a component import drag a build-config change along with it —
+          install the preset, add the package to your content globs, hope the versions agree. A
+          stylesheet of <code className="ty-font-mono">var(--ty-*)</code>-backed classes reaches a
+          Tailwind 3 app, a Tailwind 4 app, and a page with no build step identically. Load it
+          after tokens.css: without the token layer these rules render as unset.
+        </p>
+        <CodeBlock language="css">{`@import "@tyandor/tokens/tokens.css";
+@import "@tyandor/ui/ui.css";`}</CodeBlock>
+
+        <p className="mt-6 mb-2 font-mono text-[11px] tracking-widest uppercase text-text-secondary">
+          next.config.mjs — the package ships raw .tsx
+        </p>
+        <CodeBlock language="js">{`export default {
+  transpilePackages: ["@tyandor/fonts", "@tyandor/ui"],
+};`}</CodeBlock>
+
+        <p className="mt-6 mb-2 font-mono text-[11px] tracking-widest uppercase text-text-secondary">
+          app/layout.tsx
+        </p>
+        <CodeBlock language="tsx">{`import { ThemeProvider, themeScript } from "@tyandor/ui";
+
+export default function RootLayout({ children }) {
+  return (
+    <html suppressHydrationWarning>
+      <head>
+        {/* Inline and synchronous: it exists to run before the first paint. */}
+        <script dangerouslySetInnerHTML={{ __html: themeScript() }} />
+      </head>
+      <body>
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
+    </html>
+  );
+}`}</CodeBlock>
+
+        <p className="mt-6 max-w-2xl text-sm text-text-secondary">
+          Components that render an anchor take an{" "}
+          <code className="ty-font-mono ty-tone-emphasis">as</code> prop, so a Next app keeps
+          client-side navigation without the package importing{" "}
+          <code className="ty-font-mono">next/link</code> — which would make it unusable anywhere
+          else.
+        </p>
+        <CodeBlock language="tsx">{`import Link from "next/link";
+
+<HeaderLink as={Link} href="/tokens">Tokens</HeaderLink>
+<Breadcrumb linkAs={Link} items={crumbs} />`}</CodeBlock>
       </Section>
 
       <Section title="Themes" desc="Two variants, one contract.">

@@ -1,0 +1,158 @@
+/*
+ * Article prose.
+ *
+ * PLAN.md points at @tailwindcss/typography "driven by tokens", but that
+ * plugin is a Tailwind build dependency and this package deliberately has
+ * none — a plain descendant-selector block reaches vanilla-CSS and
+ * Tailwind-3 and Tailwind-4 consumers identically, and reads the same
+ * --ty-* variables the plugin config would have.
+ *
+ * Scoped with :where() throughout so every rule lands at zero specificity:
+ * a consumer's own `.my-article h2 { }` wins without !important, and a
+ * nested component (a Card inside prose) is not restyled by its container.
+ */
+
+.ty-prose {
+  color: var(--ty-text-primary);
+  font-family: var(--ty-font-prose);
+  font-size: var(--ty-body-02-size);
+  line-height: var(--ty-body-02-line-height);
+  max-width: var(--ty-measure);
+}
+
+.ty-prose > :first-child { margin-top: 0; }
+.ty-prose > :last-child  { margin-bottom: 0; }
+
+.ty-prose :where(p) {
+  margin-block: var(--ty-spacing-05);
+}
+
+.ty-prose :where(h2) {
+  margin-block: var(--ty-spacing-09) var(--ty-spacing-05);
+  color: var(--ty-text-emphasis);
+  font-size: var(--ty-heading-04-size);
+  line-height: var(--ty-heading-04-line-height);
+  font-weight: var(--ty-heading-04-weight);
+  letter-spacing: var(--ty-heading-04-letter-spacing);
+}
+
+.ty-prose :where(h3) {
+  margin-block: var(--ty-spacing-07) var(--ty-spacing-04);
+  color: var(--ty-text-emphasis);
+  font-size: var(--ty-heading-03-size);
+  line-height: var(--ty-heading-03-line-height);
+  font-weight: var(--ty-heading-03-weight);
+  letter-spacing: var(--ty-heading-03-letter-spacing);
+}
+
+.ty-prose :where(h4) {
+  margin-block: var(--ty-spacing-06) var(--ty-spacing-04);
+  color: var(--ty-text-emphasis);
+  font-size: var(--ty-heading-02-size);
+  line-height: var(--ty-heading-02-line-height);
+  font-weight: var(--ty-heading-02-weight);
+}
+
+.ty-prose :where(a) {
+  color: var(--ty-link);
+  text-decoration-line: underline;
+  text-underline-offset: 0.2em;
+  /* Duo's descenders are long; skip-ink keeps the rule legible under them. */
+  text-decoration-skip-ink: auto;
+}
+
+.ty-prose :where(a):hover { color: var(--ty-link-hover); }
+
+.ty-prose :where(strong) {
+  color: var(--ty-text-emphasis);
+  font-weight: var(--ty-weight-semibold);
+}
+
+.ty-prose :where(ul, ol) {
+  margin-block: var(--ty-spacing-05);
+  padding-left: var(--ty-spacing-06);
+}
+
+.ty-prose :where(li) { margin-block: var(--ty-spacing-03); }
+
+.ty-prose :where(li)::marker { color: var(--ty-text-placeholder); }
+
+.ty-prose :where(hr) {
+  margin-block: var(--ty-spacing-09);
+  border: 0;
+  height: var(--ty-ui-border);
+  background-color: var(--ty-border-subtle);
+}
+
+.ty-prose :where(blockquote) {
+  margin: var(--ty-spacing-07) 0;
+  padding-left: var(--ty-spacing-06);
+  border-left: var(--ty-spacing-01) solid var(--ty-interactive);
+  color: var(--ty-text-secondary);
+  font-style: italic;
+}
+
+/* Inline code sits one notch below body so it does not shout mid-sentence. */
+.ty-prose :where(code) {
+  padding: 0.1em 0.3em;
+  border-radius: var(--ty-ui-radius);
+  background-color: var(--ty-highlight);
+  color: var(--ty-text-primary);
+  font-family: var(--ty-font-mono);
+  font-size: var(--ty-code-01-size);
+}
+
+.ty-prose :where(pre) {
+  margin-block: var(--ty-spacing-06);
+  padding: var(--ty-spacing-05);
+  overflow-x: auto;
+  border: var(--ty-ui-border) solid var(--ty-border-subtle);
+  border-radius: var(--ty-ui-radius);
+  background-color: var(--ty-layer-01);
+  font-family: var(--ty-font-mono);
+  font-size: var(--ty-code-02-size);
+  line-height: var(--ty-code-02-line-height);
+}
+
+/* A <code> inside <pre> is a block, not a chip — undo the inline treatment. */
+.ty-prose :where(pre code) {
+  padding: 0;
+  border-radius: 0;
+  background-color: transparent;
+  font-size: inherit;
+}
+
+.ty-prose :where(img) {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--ty-ui-radius);
+}
+
+.ty-prose :where(figcaption) {
+  margin-top: var(--ty-spacing-03);
+  color: var(--ty-text-secondary);
+  font-family: var(--ty-font-mono);
+  font-size: var(--ty-code-01-size);
+}
+
+.ty-prose :where(table) {
+  width: 100%;
+  margin-block: var(--ty-spacing-06);
+  border-collapse: collapse;
+  font-size: var(--ty-body-01-size);
+}
+
+/* Carbon's data-table rule: no zebra striping, hover carries the row. */
+.ty-prose :where(th) {
+  padding: var(--ty-spacing-04);
+  border-bottom: var(--ty-ui-border) solid var(--ty-border-strong);
+  color: var(--ty-text-emphasis);
+  font-weight: var(--ty-weight-semibold);
+  text-align: left;
+}
+
+.ty-prose :where(td) {
+  padding: var(--ty-spacing-04);
+  border-bottom: var(--ty-ui-border) solid var(--ty-border-subtle);
+  vertical-align: top;
+}

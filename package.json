@@ -3,18 +3,23 @@
   "private": true,
   "license": "MIT",
   "type": "module",
-  "workspaces": ["packages/*", "apps/*"],
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "scripts": {
     "build": "bun run build:packages && bun run build:docs",
     "build:packages": "bun run --filter './packages/*' build",
     "build:docs": "bun run --filter './apps/*' build",
     "check:contrast": "bun run scripts/check-contrast.ts",
     "check:palette": "bun run scripts/check-palette-drift.ts",
-    "test": "bun test",
+    "test": "bun test packages",
     "typecheck": "tsc --noEmit",
-    "ci": "bun run typecheck && bun run build:packages && bun run check:contrast && bun run build:docs && bun test"
+    "ci": "bun run typecheck && bun run build:packages && bun run check:contrast && bun run build:docs && bun run test",
+    "test:visual": "playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@types/bun": "latest",
     "typescript": "^5.9.3"
   }

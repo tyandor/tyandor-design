@@ -6,3 +6,7 @@ node_modules/
 # NOTE: packages/*/dist is intentionally NOT ignored.
 # Consumers install via `github:tyandor/tyandor-design#path:packages/tokens`,
 # and git dependencies have no build step — dist must be committed.
+
+# Playwright
+test-results/
+playwright-report/

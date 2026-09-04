@@ -132,3 +132,15 @@ describe("serialisation order", () => {
     expect(emitted.slice(0, 13)).toEqual([...spacingOrder]);
   });
 });
+
+describe("json manifest", () => {
+  test("type.scale keys are exactly the TypeToken union", async () => {
+    // apps/docs casts Object.entries(tokens.type.scale) to TypeToken keys —
+    // tokens.json carries no type information, so this is what makes that
+    // cast true rather than merely plausible.
+    const manifest = JSON.parse(await dist("tokens.json")) as {
+      type: { scale: Record<string, unknown> };
+    };
+    expect(Object.keys(manifest.type.scale).sort()).toEqual(Object.keys(typeScale).sort());
+  });
+});

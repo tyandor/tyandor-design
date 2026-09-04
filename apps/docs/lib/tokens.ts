@@ -7,6 +7,7 @@
  * left to keep in sync by hand.
  */
 import raw from "@tyandor/tokens/tokens.json" with { type: "json" };
+import type { TypeToken } from "@tyandor/tokens";
 
 export type Variant = "mcrn" | "earth";
 export type RoleKind = "surface" | "text" | "nontext" | "scrim";
@@ -109,8 +110,17 @@ export function rolesForGroup(pattern: RegExp): readonly RoleTokenRow[] {
 }
 
 /** Type-scale entries in the order the source defines them (code → display). */
-export function typeEntries(): readonly [string, TypeStyle][] {
-  return Object.entries(tokens.type.scale);
+/**
+ * Type-scale entries, keyed by the TypeToken union rather than by string.
+ *
+ * tokens.json has no type information of its own, so the cast is where the
+ * manifest re-joins the typed world. It holds because build.ts serialises
+ * `typeScale` verbatim — the JSON keys ARE the union members — and the
+ * tokens test suite asserts that correspondence so the cast cannot quietly
+ * become a lie.
+ */
+export function typeEntries(): readonly (readonly [TypeToken, TypeStyle])[] {
+  return Object.entries(tokens.type.scale) as (readonly [TypeToken, TypeStyle])[];
 }
 
 /**
