@@ -100,6 +100,14 @@ module.exports = {
         ]
       },
       "fontSize": {
+        "label-01": [
+          "0.6875rem",
+          {
+            "lineHeight": "1.4",
+            "letterSpacing": "0",
+            "fontWeight": "400"
+          }
+        ],
         "code-01": [
           "0.8125rem",
           {

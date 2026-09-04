@@ -9,7 +9,7 @@ export const metadata = { title: "Foundation components" };
 /** A visible block, so gap and column behaviour are legible in a specimen. */
 function Box({ children }: { children?: React.ReactNode }) {
   return (
-    <div className="flex min-h-10 items-center justify-center rounded-sm border border-border-subtle bg-layer-02 px-3 font-mono text-[13px] text-text-secondary">
+    <div className="flex min-h-10 items-center justify-center rounded-sm border border-border-subtle bg-layer-02 px-3 ty-type-code-01 text-text-secondary">
       {children}
     </div>
   );
@@ -30,14 +30,14 @@ export default function FoundationPage() {
       >
         <Specimen
           title="Type-scale roles"
-          desc="All twelve roles. code-01 and code-02 pick up the Mono stack from their generated class — a caller never chooses a family for a role."
+          desc={`All ${typeEntries().length} roles. code-01 and code-02 pick up the Mono stack from their generated class — a caller never chooses a family for a role.`}
           code={`<Text size="body-02">Duo runs wide; the scale is tuned for it.</Text>
 <Text size="code-01">const tokens = "the product";</Text>`}
         >
           <Stack gap="04">
             {typeEntries().map(([token]) => (
               <div key={token} className="flex items-baseline gap-4">
-                <code className="w-28 shrink-0 font-mono text-[11px] text-text-placeholder">
+                <code className="w-28 shrink-0 ty-type-label-01 font-mono text-text-placeholder">
                   {token}
                 </code>
                 <Text size={token} className="truncate">
@@ -58,7 +58,7 @@ export default function FoundationPage() {
             {(["primary", "secondary", "emphasis", "placeholder", "link", "error", "warning", "success", "info"] as const).map(
               (tone) => (
                 <div key={tone} className="flex items-baseline gap-4">
-                  <code className="w-28 shrink-0 font-mono text-[11px] text-text-placeholder">
+                  <code className="w-28 shrink-0 ty-type-label-01 font-mono text-text-placeholder">
                     {tone}
                   </code>
                   <Text tone={tone}>The quick brown fox jumps over the lazy dog</Text>
@@ -131,7 +131,7 @@ export default function FoundationPage() {
           <Stack gap="06">
             {(["03", "05", "07"] as const).map((gap) => (
               <div key={gap}>
-                <code className="mb-2 block font-mono text-[11px] text-text-placeholder">
+                <code className="mb-2 block ty-type-label-01 font-mono text-text-placeholder">
                   gap=&quot;{gap}&quot;
                 </code>
                 <Stack direction="horizontal" gap={gap}>

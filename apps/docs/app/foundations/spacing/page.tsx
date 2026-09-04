@@ -22,8 +22,8 @@ export default function SpacingPage() {
               key={name}
               className="grid grid-cols-[110px_90px_1fr] items-center gap-4 rounded-sm border border-border-subtle bg-layer-01 px-4 py-3"
             >
-              <code className="font-mono text-[13px] text-text-emphasis">spacing-{name}</code>
-              <span className="font-mono text-[12px] text-text-secondary">
+              <code className="ty-type-code-01 text-text-emphasis">spacing-{name}</code>
+              <span className="ty-type-label-01 font-mono text-text-secondary">
                 {s.rem} · {s.px}px
               </span>
               <div className="flex items-center">
@@ -45,13 +45,13 @@ export default function SpacingPage() {
               key={name}
               className="flex items-center justify-between gap-4 rounded-sm border border-border-subtle bg-layer-01 p-4"
             >
-              <code className="font-mono text-[13px] text-text-emphasis">{name}</code>
+              <code className="ty-type-code-01 text-text-emphasis">{name}</code>
               <div
                 className="rounded-sm border border-border-subtle bg-layer-02"
                 style={{ height: rem, width: "80px" }}
                 aria-hidden
               />
-              <span className="font-mono text-[11px] text-text-secondary">
+              <span className="ty-type-label-01 font-mono text-text-secondary">
                 {rem} · {parseFloat(rem) * 16}px
               </span>
             </div>
@@ -66,8 +66,8 @@ export default function SpacingPage() {
               key={name}
               className="rounded-sm border border-border-subtle bg-layer-01 p-4"
             >
-              <div className="mb-1 font-mono text-[13px] text-text-emphasis">{name}</div>
-              <div className="font-mono text-[11px] text-text-secondary">
+              <div className="mb-1 ty-type-code-01 text-text-emphasis">{name}</div>
+              <div className="ty-type-label-01 font-mono text-text-secondary">
                 {rem} · {parseFloat(rem) * 16}px
               </div>
             </li>
@@ -79,8 +79,8 @@ export default function SpacingPage() {
         <dl className="grid gap-3 rounded-sm border border-border-subtle bg-layer-01 p-5 sm:grid-cols-2">
           {Object.entries(tokens.grid).map(([k, v]) => (
             <div key={k} className="flex items-baseline justify-between border-b border-border-subtle pb-2 last:border-0">
-              <dt className="font-mono text-[13px] text-text-emphasis">{k}</dt>
-              <dd className="font-mono text-[12px] text-text-secondary">
+              <dt className="ty-type-code-01 text-text-emphasis">{k}</dt>
+              <dd className="ty-type-label-01 font-mono text-text-secondary">
                 {String(v)}
               </dd>
             </div>

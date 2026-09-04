@@ -135,6 +135,10 @@
   --ty-weight-medium: 500;
   --ty-weight-semibold: 600;
   --ty-weight-bold: 700;
+  --ty-label-01-size: 0.6875rem;
+  --ty-label-01-line-height: 1.4;
+  --ty-label-01-weight: 400;
+  --ty-label-01-letter-spacing: 0;
   --ty-code-01-size: 0.8125rem;
   --ty-code-01-line-height: 1.5;
   --ty-code-01-weight: 400;

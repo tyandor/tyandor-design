@@ -26,7 +26,14 @@ export default defineConfig({
     // as its own step, so this reuses that output rather than rebuilding.
     command: "bun run --filter './apps/docs' start",
     url: `http://127.0.0.1:${PORT}`,
-    reuseExistingServer: !process.env.CI,
+    // Deliberately false everywhere, not just in CI. A `next start` left
+    // running from an earlier session keeps serving the CSS hash baked into
+    // its own build; once .next is rebuilt that file 404s, every custom
+    // property goes undefined, and the colour probes read black in both
+    // themes. Worse, before a rebuild it reports a confident pass for code
+    // that is not on disk. A few seconds per run is cheaper than a suite
+    // that lies about which build it checked.
+    reuseExistingServer: false,
     timeout: 120_000,
   },
 });

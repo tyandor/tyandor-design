@@ -12,7 +12,7 @@ export function Section({
   return (
     <section id={id} className="mx-auto max-w-6xl px-6 py-8">
       <div className="mb-6 flex items-baseline justify-between border-b border-border-subtle pb-3">
-        <h2 className="font-mono text-[11px] tracking-widest uppercase text-text-secondary">
+        <h2 className="ty-label text-text-secondary">
           {title}
         </h2>
         {desc ? (

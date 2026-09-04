@@ -24,7 +24,7 @@ export default function UsagePage() {
       </Section>
 
       <Section title="Tailwind 3" desc="Wire tokens.css into your entry stylesheet and add the preset.">
-        <p className="mb-2 font-mono text-[11px] tracking-widest uppercase text-text-secondary">
+        <p className="mb-2 ty-label text-text-secondary">
           globals.css
         </p>
         <CodeBlock language="css">{`@import "@tyandor/tokens/tokens.css";
@@ -34,7 +34,7 @@ export default function UsagePage() {
 @tailwind components;
 @tailwind utilities;`}</CodeBlock>
 
-        <p className="mt-4 mb-2 font-mono text-[11px] tracking-widest uppercase text-text-secondary">
+        <p className="mt-4 mb-2 ty-label text-text-secondary">
           tailwind.config.ts
         </p>
         <CodeBlock language="ts">{`import type { Config } from "tailwindcss";
@@ -47,7 +47,7 @@ export default {
       </Section>
 
       <Section title="Tailwind 4" desc="Map the role tokens into @theme so Tailwind's utilities resolve to var(--ty-*).">
-        <p className="mb-2 font-mono text-[11px] tracking-widest uppercase text-text-secondary">
+        <p className="mb-2 ty-label text-text-secondary">
           globals.css
         </p>
         <CodeBlock language="css">{`@import "@tyandor/tokens/tokens.css";
@@ -107,14 +107,14 @@ export default function RootLayout({ children }) {
         <CodeBlock language="css">{`@import "@tyandor/tokens/tokens.css";
 @import "@tyandor/ui/ui.css";`}</CodeBlock>
 
-        <p className="mt-6 mb-2 font-mono text-[11px] tracking-widest uppercase text-text-secondary">
+        <p className="mt-6 mb-2 ty-label text-text-secondary">
           next.config.mjs — the package ships raw .tsx
         </p>
         <CodeBlock language="js">{`export default {
   transpilePackages: ["@tyandor/fonts", "@tyandor/ui"],
 };`}</CodeBlock>
 
-        <p className="mt-6 mb-2 font-mono text-[11px] tracking-widest uppercase text-text-secondary">
+        <p className="mt-6 mb-2 ty-label text-text-secondary">
           app/layout.tsx
         </p>
         <CodeBlock language="tsx">{`import { ThemeProvider, themeScript } from "@tyandor/ui";
@@ -245,7 +245,7 @@ function Rule({
         borderLeftColor: isDo ? "var(--ty-support-success)" : "var(--ty-support-error)",
       }}
     >
-      <div className="flex items-center gap-2 font-mono text-[11px] tracking-widest uppercase">
+      <div className="flex items-center gap-2 ty-label">
         <span style={{ color: isDo ? "var(--ty-support-success)" : "var(--ty-support-error)" }}>
           {isDo ? "Do" : "Don't"}
         </span>
