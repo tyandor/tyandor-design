@@ -7,7 +7,10 @@
     "packages/*",
     "apps/*"
   ],
+  "packageManager": "bun@1.2.20",
   "scripts": {
+    "dev": "bun run scripts/dev.ts",
+    "preview": "bun run build && bun run --filter './apps/docs' start",
     "build": "bun run build:packages && bun run build:docs",
     "build:packages": "bun run --filter './packages/*' build",
     "build:docs": "bun run --filter './apps/*' build",
@@ -17,7 +20,8 @@
     "test": "bun test packages",
     "typecheck": "tsc --noEmit",
     "ci": "bun run typecheck && bun run build:packages && bun run check:contrast && bun run check:type && bun run build:docs && bun run test",
-    "test:visual": "playwright test"
+    "test:visual": "playwright test",
+    "verify": "bun run ci && bun run test:visual"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
