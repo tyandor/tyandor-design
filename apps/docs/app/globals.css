@@ -45,7 +45,14 @@
   --color-support-info: var(--ty-support-info);
 
   /* Fonts are already wired via --ty-font-* by tokens.css + fonts.css;
-     Tailwind's `font-body` / `font-mono` utilities line up here. */
+     Tailwind's `font-body` / `font-mono` utilities line up here.
+
+     The type *scale* is deliberately absent. It reaches this app through
+     ui.css's .ty-type-* / .ty-label classes instead, so there is one way to
+     express type rather than two that can disagree. Mapping it here as well
+     would let `text-code-01` and `.ty-type-code-01` drift apart silently.
+     Note ui.css is imported before Tailwind, so a utility on the same
+     element (font-mono, leading-snug) still wins — that is intended. */
   --font-body: var(--ty-font-body);
   --font-mono: var(--ty-font-mono);
 }
@@ -68,14 +75,4 @@ html, body {
 *:focus-visible {
   outline: 2px solid var(--ty-focus);
   outline-offset: 2px;
-}
-
-/* Utility-friendly readout heading style used by section headers. */
-.readout-heading {
-  font-family: var(--ty-font-mono);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ty-text-secondary);
 }

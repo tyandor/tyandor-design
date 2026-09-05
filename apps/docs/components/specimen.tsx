@@ -25,12 +25,12 @@ export function Specimen({
 }) {
   return (
     <div className="mb-8">
-      <h3 className="mb-1 text-[15px] font-semibold text-text-emphasis">{title}</h3>
+      <h3 className="mb-1 ty-type-heading-01 text-text-emphasis">{title}</h3>
       {desc ? <p className="mb-3 max-w-2xl text-sm text-text-secondary">{desc}</p> : null}
       <div className="rounded-sm border border-border-subtle bg-layer-01 p-6">{children}</div>
       {code ? (
         <details className="mt-2">
-          <summary className="cursor-pointer font-mono text-[11px] tracking-widest uppercase text-text-secondary hover:text-text-primary">
+          <summary className="cursor-pointer ty-label text-text-secondary hover:text-text-primary">
             Source
           </summary>
           <CodeBlock language="tsx">{code}</CodeBlock>
@@ -57,7 +57,7 @@ export function PropsTable({ rows }: { rows: readonly PropRow[] }) {
             {["Prop", "Type", "Default", "Notes"].map((h) => (
               <th
                 key={h}
-                className="border-b border-border-strong py-2 pr-4 text-left font-mono text-[11px] tracking-widest uppercase text-text-secondary"
+                className="border-b border-border-strong py-2 pr-4 text-left ty-label text-text-secondary"
               >
                 {h}
               </th>
@@ -67,13 +67,13 @@ export function PropsTable({ rows }: { rows: readonly PropRow[] }) {
         <tbody>
           {rows.map((r) => (
             <tr key={r.name}>
-              <td className="border-b border-border-subtle py-2 pr-4 align-top font-mono text-[13px] text-text-emphasis">
+              <td className="border-b border-border-subtle py-2 pr-4 align-top ty-type-code-01 text-text-emphasis">
                 {r.name}
               </td>
-              <td className="border-b border-border-subtle py-2 pr-4 align-top font-mono text-[13px] text-link">
+              <td className="border-b border-border-subtle py-2 pr-4 align-top ty-type-code-01 text-link">
                 {r.type}
               </td>
-              <td className="border-b border-border-subtle py-2 pr-4 align-top font-mono text-[13px] text-text-placeholder">
+              <td className="border-b border-border-subtle py-2 pr-4 align-top ty-type-code-01 text-text-placeholder">
                 {r.def ?? "—"}
               </td>
               <td className="border-b border-border-subtle py-2 align-top text-text-secondary">

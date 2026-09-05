@@ -51,8 +51,8 @@ export default function TypographyPage() {
                 Duo
               </p>
               <div className="flex items-baseline justify-between gap-2">
-                <code className="font-mono text-[13px] text-text-primary">{name}</code>
-                <span className="font-mono text-[11px] text-text-secondary">{value}</span>
+                <code className="ty-type-code-01 text-text-primary">{name}</code>
+                <span className="ty-type-label-01 font-mono text-text-secondary">{value}</span>
               </div>
             </div>
           ))}
@@ -66,8 +66,8 @@ export default function TypographyPage() {
             return (
               <li key={name} className="grid gap-4 p-6 sm:grid-cols-[220px_1fr] sm:items-baseline">
                 <div className="flex flex-col gap-1">
-                  <code className="font-mono text-[13px] text-text-emphasis">{name}</code>
-                  <p className="font-mono text-[11px] text-text-secondary">
+                  <code className="ty-type-code-01 text-text-emphasis">{name}</code>
+                  <p className="ty-type-label-01 font-mono text-text-secondary">
                     {s.size} · lh {s.lineHeight} · w{s.weight}
                     {s.letterSpacing !== "0" ? ` · ${s.letterSpacing}` : ""}
                   </p>
@@ -104,7 +104,7 @@ export default function TypographyPage() {
 
       <Section title="Mono for readouts" desc="Uppercase, wide tracking, muted color — the terminal voice this system leans on.">
         <div className="rounded-sm border border-border-subtle bg-layer-01 p-6">
-          <div className="mb-2 font-mono text-[11px] tracking-widest uppercase text-text-secondary">
+          <div className="mb-2 ty-label text-text-secondary">
             System status
           </div>
           <div className="font-mono text-sm text-text-primary">
@@ -140,13 +140,13 @@ function FamilyCard({
   return (
     <div className="flex flex-col gap-3 rounded-sm border border-border-subtle bg-layer-01 p-5">
       <div className="flex items-baseline justify-between gap-2">
-        <code className="font-mono text-[13px] text-text-emphasis">{token}</code>
-        <span className="font-mono text-[11px] text-text-secondary">{role}</span>
+        <code className="ty-type-code-01 text-text-emphasis">{token}</code>
+        <span className="ty-type-label-01 font-mono text-text-secondary">{role}</span>
       </div>
       <p className="text-2xl text-text-emphasis" style={style}>
         {sample}
       </p>
-      <p className="break-all font-mono text-[11px] leading-relaxed text-text-secondary">
+      <p className="break-all ty-type-label-01 font-mono leading-relaxed text-text-secondary">
         {family}
       </p>
     </div>

@@ -6,7 +6,7 @@ export default function LandingPage() {
     <div>
       <section className="border-b border-border-subtle">
         <div className="mx-auto max-w-6xl px-6 pt-20 pb-20">
-          <div className="mb-4 font-mono text-[11px] tracking-widest uppercase text-text-secondary">
+          <div className="mb-4 ty-label text-text-secondary">
             @tyandor/design
           </div>
           <h1 className="max-w-4xl text-5xl font-bold tracking-tight text-text-emphasis sm:text-6xl">
@@ -15,7 +15,7 @@ export default function LandingPage() {
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-text-primary">
             A personal design system that borrows Carbon&apos;s{" "}
             <em className="text-text-emphasis">roles</em> — layering, tokens, spacing, type scale
-            — without taking on <code className="font-mono text-[15px] text-text-emphasis">@carbon/react</code>.
+            — without taking on <code className="ty-type-body-01 font-mono text-text-emphasis">@carbon/react</code>.
             The Expanse palette supplies the values; iA Writer Duo and Mono supply the voice.
           </p>
           <div className="mt-8 flex flex-wrap gap-3 font-mono text-sm">
@@ -45,7 +45,7 @@ export default function LandingPage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-6 py-16">
-        <div className="mb-8 font-mono text-[11px] tracking-widest uppercase text-text-secondary">
+        <div className="mb-8 ty-label text-text-secondary">
           What lives here
         </div>
         <div className="grid gap-6 sm:grid-cols-3">
@@ -75,7 +75,7 @@ export default function LandingPage() {
 
       <section className="border-t border-border-subtle bg-layer-01">
         <div className="mx-auto max-w-6xl px-6 py-16">
-          <div className="mb-4 font-mono text-[11px] tracking-widest uppercase text-text-secondary">
+          <div className="mb-4 ty-label text-text-secondary">
             Install
           </div>
           <p className="mb-4 max-w-2xl text-text-primary">
@@ -113,7 +113,7 @@ function Card({
 }) {
   return (
     <article className="flex h-full flex-col rounded-sm border border-border-subtle bg-layer-01 p-5 transition-colors hover:bg-layer-hover">
-      <div className="mb-3 font-mono text-[10px] tracking-widest uppercase text-text-secondary">
+      <div className="mb-3 ty-label text-text-secondary">
         {eyebrow}
       </div>
       <h3 className="font-mono text-lg text-text-emphasis">{title}</h3>

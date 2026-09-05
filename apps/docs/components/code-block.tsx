@@ -11,7 +11,7 @@ export function CodeBlock({
 }) {
   return (
     <pre
-      className="my-4 overflow-x-auto rounded-sm border border-border-subtle bg-layer-01 p-4 font-mono text-[13px] leading-relaxed text-text-primary"
+      className="my-4 overflow-x-auto rounded-sm border border-border-subtle bg-layer-01 p-4 ty-type-code-01 leading-relaxed text-text-primary"
       data-language={language ?? "plain"}
     >
       <code>{children}</code>

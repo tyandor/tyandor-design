@@ -102,8 +102,15 @@ describe("scales", () => {
     }
   });
 
-  test("type scale is non-decreasing from body through display", () => {
-    const order = ["body-01", "body-02", "heading-03", "heading-04", "heading-05", "display-02"] as const;
+  test("type scale is strictly increasing from label through display", () => {
+    // label-01 leads the list on purpose: it is the scale's floor, and the
+    // reason it exists is that apps/docs kept reaching below code-01. If a
+    // later token undercuts it, this fails rather than quietly reopening
+    // the gap that label-01 was added to close.
+    const order = [
+      "label-01", "code-01", "body-01", "body-02",
+      "heading-03", "heading-04", "heading-05", "display-02",
+    ] as const;
     const sizes = order.map((k) => parseFloat(typeScale[k].size));
     for (let i = 1; i < sizes.length; i++) expect(sizes[i]!).toBeGreaterThan(sizes[i - 1]!);
   });

@@ -97,10 +97,10 @@ function ChartSeries() {
               </div>
               <div className="p-3">
                 <div className="flex items-baseline justify-between gap-2">
-                  <span className="font-mono text-[13px] text-text-emphasis">{p.name}</span>
-                  <span className="font-mono text-[11px] text-text-secondary">series-{i + 1}</span>
+                  <span className="ty-type-code-01 text-text-emphasis">{p.name}</span>
+                  <span className="ty-type-label-01 font-mono text-text-secondary">series-{i + 1}</span>
                 </div>
-                <p className="mt-1 text-[12px] text-text-secondary">{p.role}</p>
+                <p className="mt-1 ty-type-label-01 text-text-secondary">{p.role}</p>
               </div>
             </li>
           );

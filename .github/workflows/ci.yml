@@ -40,6 +40,10 @@ jobs:
       - name: Contrast gate (WCAG AA)
         run: bun run check:contrast
 
+      - name: Type-scale gate
+        # Fails if an app hard-codes a font size instead of using the scale.
+        run: bun run check:type
+
       - name: Build docs
         # Verification-only: catches type errors, missing tokens, broken imports.
         # Deployment goes through the `vercel` CLI; CI does not push to Vercel.

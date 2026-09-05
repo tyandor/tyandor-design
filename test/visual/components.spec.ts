@@ -19,7 +19,12 @@ import raw from "../../packages/tokens/dist/tokens.json" with { type: "json" };
 
 const tokens = raw as unknown as {
   roles: { mcrn: Record<string, string>; earth: Record<string, string> };
+  type: { scale: Record<string, { size: string; weight: string; letterSpacing: string }> };
 };
+
+const ROOT_PX = 16;
+/** tokens.json holds rem; getComputedStyle reports px. */
+const remToPx = (rem: string): string => `${parseFloat(rem) * ROOT_PX}px`;
 
 type Theme = "mcrn" | "earth";
 const THEMES: readonly Theme[] = ["mcrn", "earth"];
@@ -182,5 +187,54 @@ test.describe("theme mechanics", () => {
       "aria-checked",
       "true",
     );
+  });
+});
+
+/**
+ * label-01 and its treatment class.
+ *
+ * The colour probes above assert selector -> role colour, which cannot say
+ * anything about type metrics. This closes that gap for the scale's floor:
+ * label-01 exists precisely because apps/docs kept hard-coding sizes below
+ * code-01, so it is worth proving the token actually reaches the browser
+ * rather than trusting that the build emitted it.
+ */
+test.describe("label-01", () => {
+  test("the token reaches the browser with its own metrics", async ({ page }) => {
+    await visit(page, "/components/foundation", "mcrn");
+    const t = tokens.type.scale["label-01"]!;
+
+    expect(await computed(page, ".ty-type-label-01", "font-size")).toBe(remToPx(t.size));
+    expect(await computed(page, ".ty-type-label-01", "font-weight")).toBe(t.weight);
+
+    // Neutral on purpose — the eyebrow treatment lives in .ty-label, not here.
+    expect(t.letterSpacing).toBe("0");
+    expect(await computed(page, ".ty-type-label-01", "text-transform")).toBe("none");
+  });
+
+  test(".ty-label adds the treatment without redefining the metrics", async ({ page }) => {
+    await visit(page, "/components/foundation", "mcrn");
+    const t = tokens.type.scale["label-01"]!;
+
+    // Size comes from the token; casing, weight and tracking are the treatment.
+    expect(await computed(page, ".ty-label", "font-size")).toBe(remToPx(t.size));
+    expect(await computed(page, ".ty-label", "text-transform")).toBe("uppercase");
+    expect(await computed(page, ".ty-label", "letter-spacing")).not.toBe("normal");
+  });
+
+  test("no element still carries a hard-coded sub-code-01 size", async ({ page }) => {
+    await visit(page, "/components/foundation", "mcrn");
+    const floor = parseFloat(tokens.type.scale["label-01"]!.size) * ROOT_PX;
+    const strays = await page.evaluate((floorPx) => {
+      const out: string[] = [];
+      // Array.from, not for-of: the repo's lib config does not give
+      // NodeListOf an iterator (TS2488).
+      for (const el of Array.from(document.querySelectorAll<HTMLElement>("body *"))) {
+        const px = parseFloat(getComputedStyle(el).fontSize);
+        if (px < floorPx - 0.01) out.push(`${el.tagName}.${el.className} @ ${px}px`);
+      }
+      return out;
+    }, floor);
+    expect(strays, "elements rendering below the scale's floor").toEqual([]);
   });
 });

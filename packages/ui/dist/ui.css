@@ -69,6 +69,13 @@
 /* ── Type scale ───────────────────────────────────────────────────── */
 /* GENERATED from @tyandor/tokens typeScale by build.ts — do not edit. */
 
+.ty-type-label-01 {
+  font-family: var(--ty-font-body);
+  font-size: var(--ty-label-01-size);
+  line-height: var(--ty-label-01-line-height);
+  font-weight: var(--ty-label-01-weight);
+  letter-spacing: var(--ty-label-01-letter-spacing);
+}
 .ty-type-code-01 {
   font-family: var(--ty-font-mono);
   font-size: var(--ty-code-01-size);
@@ -155,7 +162,7 @@
 }
 
 /*
- * Typography. The 12 type-scale classes (.ty-type-body-02 etc.) are
+ * Typography. The type-scale classes (.ty-type-body-02 etc.) are
  * GENERATED from @tyandor/tokens by build.ts and inserted above this file —
  * if you are looking for them in source, they are in packages/tokens/src/type.ts.
  *
@@ -197,6 +204,25 @@
 .ty-readout {
   font-family: var(--ty-font-mono);
   font-size: var(--ty-code-01-size);
+  font-weight: var(--ty-weight-medium);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/*
+ * The eyebrow: .ty-readout's smaller sibling, set at label-01 (the scale's
+ * floor) for column heads, swatch captions and section kickers where code-01
+ * is too loud.
+ *
+ * Weight, tracking and casing are set here rather than in label-01, for the
+ * same reason .ty-readout sets them rather than code-01: the token has to
+ * stay usable for the lowercase captions that make up half its call sites.
+ * Only the metrics come from the token.
+ */
+.ty-label {
+  font-family: var(--ty-font-mono);
+  font-size: var(--ty-label-01-size);
+  line-height: var(--ty-label-01-line-height);
   font-weight: var(--ty-weight-medium);
   letter-spacing: 0.1em;
   text-transform: uppercase;

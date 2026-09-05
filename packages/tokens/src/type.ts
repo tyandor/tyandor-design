@@ -45,6 +45,20 @@ const style = (size: string, lineHeight: string, weight: string, letterSpacing =
   ({ size, lineHeight, weight, letterSpacing });
 
 export const typeScale = {
+  // Label — the scale's floor, for text that sits below code-01: swatch
+  // captions, column heads, metric readouts, section eyebrows.
+  //
+  // Neutral on purpose. The uppercase-and-tracked-out eyebrow treatment is
+  // .ty-label in the component layer, exactly as .ty-readout treats code-01;
+  // baking 0.1em and medium weight in here would make the token unusable for
+  // the lowercase captions that are half its call sites. Tokens carry
+  // metrics, treatments carry style.
+  //
+  // Added after an audit found 32 hand-written text-[10px]/[11px]/[12px]
+  // values across apps/docs. A magic number repeated that many times at one
+  // size is a missing token, not a formatting preference.
+  "label-01": style("0.6875rem", "1.4", fontWeight.regular), // 11px
+
   // Code — iA Writer Mono, set one notch below body so it does not shout
   // inside a paragraph.
   "code-01": style("0.8125rem", "1.5", fontWeight.regular),  // 13px

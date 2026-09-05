@@ -31,16 +31,23 @@ export function TokenSwatch({
       </div>
       <div className="flex flex-1 flex-col gap-1 border-t border-border-subtle p-3">
         <div className="flex items-baseline justify-between gap-2">
-          <code className="font-mono text-[13px] text-text-emphasis">{name}</code>
+          <code className="ty-type-code-01 text-text-emphasis">{name}</code>
           {kind ? (
-            <span className="rounded-sm bg-layer-02 px-1.5 py-0.5 font-mono text-[10px] tracking-wider uppercase text-text-secondary">
+            <span className="rounded-sm bg-layer-02 px-1.5 py-0.5 ty-label text-text-secondary">
               {kind}
             </span>
           ) : null}
         </div>
-        <p className="text-[13px] leading-snug text-text-secondary">{desc}</p>
+        {/*
+          code-01's metrics with the body face: the scale has no 13px body
+          role (code-01/02 are Mono, body-01 starts at 15px), and 15px would
+          read as large as the page's own prose inside a card caption. If a
+          third one of these shows up, that is the argument for a caption
+          token rather than a third pairing.
+        */}
+        <p className="ty-type-code-01 font-body leading-snug text-text-secondary">{desc}</p>
         {tagline ? (
-          <p className="mt-1 font-mono text-[11px] italic text-text-placeholder">{tagline}</p>
+          <p className="mt-1 ty-type-label-01 font-mono italic text-text-placeholder">{tagline}</p>
         ) : null}
       </div>
     </article>
@@ -55,8 +62,8 @@ function VariantChip({ label, hex }: { label: string; hex: string }) {
       className="flex h-24 flex-col justify-between p-2"
       style={{ backgroundColor: hex, color: isOpaque ? readableTextOn(hex) : "#fff" }}
     >
-      <span className="font-mono text-[10px] tracking-widest uppercase opacity-80">{label}</span>
-      <span className="font-mono text-[11px] opacity-95">{hex}</span>
+      <span className="ty-label opacity-80">{label}</span>
+      <span className="ty-type-label-01 font-mono opacity-95">{hex}</span>
     </div>
   );
 }

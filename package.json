@@ -12,10 +12,11 @@
     "build:packages": "bun run --filter './packages/*' build",
     "build:docs": "bun run --filter './apps/*' build",
     "check:contrast": "bun run scripts/check-contrast.ts",
+    "check:type": "bun run scripts/check-type.ts",
     "check:palette": "bun run scripts/check-palette-drift.ts",
     "test": "bun test packages",
     "typecheck": "tsc --noEmit",
-    "ci": "bun run typecheck && bun run build:packages && bun run check:contrast && bun run build:docs && bun run test",
+    "ci": "bun run typecheck && bun run build:packages && bun run check:contrast && bun run check:type && bun run build:docs && bun run test",
     "test:visual": "playwright test"
   },
   "devDependencies": {
