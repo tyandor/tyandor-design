@@ -10,10 +10,13 @@
   "exports": {
     ".": "./src/index.ts",
     "./tokens.css": "./dist/tokens.css",
-    "./tailwind-preset": "./dist/tailwind-preset.js",
+    "./tailwind-preset": "./dist/tailwind-preset.cjs",
     "./tokens.json": "./dist/tokens.json"
   },
   "scripts": {
     "build": "bun run build.ts"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
   }
 }
