@@ -9,6 +9,12 @@
  * Tailwind 3:  presets: [require('@tyandor/tokens/tailwind-preset')]
  * Tailwind 4:  import the CSS and map with @theme; this file still works
  *              via @config for projects mid-migration.
+ *
+ * The .cjs extension is load-bearing. This package is "type": "module", so a
+ * plain .js file here would be parsed as ESM, and Node's require() would hand
+ * Tailwind an empty object instead of throwing — every token class would then
+ * resolve to nothing, silently. .cjs is CommonJS regardless of the package
+ * type field, which is what a Tailwind 3 config's require() needs.
  */
 module.exports = {
   "theme": {
@@ -67,19 +73,19 @@ module.exports = {
         }
       },
       "spacing": {
-        "10": "4rem",
-        "11": "5rem",
-        "12": "6rem",
-        "13": "10rem",
-        "01": "0.125rem",
-        "02": "0.25rem",
-        "03": "0.5rem",
-        "04": "0.75rem",
-        "05": "1rem",
-        "06": "1.5rem",
-        "07": "2rem",
-        "08": "2.5rem",
-        "09": "3rem"
+        "ty-01": "0.125rem",
+        "ty-02": "0.25rem",
+        "ty-03": "0.5rem",
+        "ty-04": "0.75rem",
+        "ty-05": "1rem",
+        "ty-06": "1.5rem",
+        "ty-07": "2rem",
+        "ty-08": "2.5rem",
+        "ty-09": "3rem",
+        "ty-10": "4rem",
+        "ty-11": "5rem",
+        "ty-12": "6rem",
+        "ty-13": "10rem"
       },
       "screens": {
         "sm": "20rem",
