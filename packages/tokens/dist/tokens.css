@@ -3,9 +3,22 @@
  *
  * MCRN (dark) is the default theme. Earth (light) applies when the visitor
  * has no explicit preference and their system asks for light, or whenever
- * [data-theme="earth"] is set. An explicit data-theme always wins: the
- * media-query block is scoped to :root:not([data-theme]), so it simply does
- * not match once a choice has been made.
+ * the earth theme is selected.
+ *
+ * A theme may be selected two ways, and both are first-class: the
+ * [data-theme] attribute, or the .ty-theme-* class. The class form exists
+ * because next-themes — the switcher most consumers reach for — writes a
+ * class by default.
+ *
+ * An explicit choice always wins, whichever form it takes. That is what the
+ * three :not() clauses on the media block are for, and they are load-bearing
+ * rather than defensive: :root:not([data-theme]) is specificity (0,2,0) —
+ * :not() contributes its argument — while .ty-theme-mcrn is only (0,1,0).
+ * Guarding on the attribute alone would let the media block outrank a class
+ * selection, so a visitor on a light-preferring OS who explicitly picked
+ * MCRN would be served Earth. Disarming the block is the fix; raising the
+ * class's specificity to beat it would not be, because the block would still
+ * match and every future token added to one and not the other would drift.
  */
 
 :root {
@@ -215,7 +228,7 @@
 }
 
 @media (prefers-color-scheme: light) {
-  :root:not([data-theme]) {
+  :root:not([data-theme]):not(.ty-theme-earth):not(.ty-theme-mcrn) {
     color-scheme: light;
     --ty-background: #eef2f5;
     --ty-background-rgb: 238 242 245;

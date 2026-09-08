@@ -57,29 +57,152 @@ describe("generated css", () => {
     expect(css).toContain("color-scheme: light;");
   });
 
+  test("both selection mechanisms are shipped for both themes", async () => {
+    const css = await dist("tokens.css");
+    for (const theme of ["earth", "mcrn"]) {
+      expect(css, `[data-theme="${theme}"]`).toContain(`[data-theme="${theme}"]`);
+      expect(css, `.ty-theme-${theme}`).toContain(`.ty-theme-${theme}`);
+    }
+  });
+
   test("the light media query cannot override an explicit choice", async () => {
     const css = await dist("tokens.css");
-    expect(css).toContain(":root:not([data-theme])");
+    // Slice from the media block, not from the first ":root:not(" in the
+    // file — the header comment discusses that selector, and anchoring on it
+    // silently produced an empty slice that "failed" for the wrong reason.
+    const mediaAt = css.indexOf("@media (prefers-color-scheme: light)");
+    expect(mediaAt).toBeGreaterThan(-1);
+    const guard = css.slice(mediaAt, css.indexOf("{", css.indexOf(":root", mediaAt)));
+
+    // Assert the property, not the spelling. The earlier version of this test
+    // only checked that :root:not([data-theme]) appeared, which the attribute
+    // mechanism satisfied on its own — so it went green while a class-based
+    // choice was still being overridden by this very block. Every selector a
+    // consumer can use to state a preference has to disarm the fallback, so
+    // derive the list from the selectors we actually ship rather than
+    // restating it here.
+    // Each block heads two lines: `[data-theme="x"],` then `.ty-theme-x {`.
+    // Match both terminators — anchoring on the comma alone collected only the
+    // attribute selectors, so the class assertions never ran at all.
+    const selectors = [
+      ...css.matchAll(/^(\[data-theme="\w+"\]|\.ty-theme-[\w-]+)\s*[,{]$/gm),
+    ].map((m) => m[1]!);
+    expect(selectors.length, "found no theme selectors to check").toBe(4);
+
+    for (const selector of new Set(selectors)) {
+      // A class disarms via :not(.foo); an attribute via the bare :not([data-theme]),
+      // which covers every value at once.
+      const disarm = selector.startsWith(".") ? `:not(${selector})` : ":not([data-theme])";
+      expect(guard, `${selector} must disarm the light fallback`).toContain(disarm);
+    }
   });
 });
 
 describe("tailwind preset", () => {
   test("contains no raw hex values — principle 1", async () => {
-    const preset = await dist("tailwind-preset.js");
+    const preset = await dist("tailwind-preset.cjs");
     const body = preset.slice(preset.indexOf("module.exports"));
     expect(body).not.toMatch(/#[0-9a-fA-F]{6}/);
   });
 
   test("colours support opacity modifiers", async () => {
-    const preset = await dist("tailwind-preset.js");
+    const preset = await dist("tailwind-preset.cjs");
     expect(preset).toContain("rgb(var(--ty-layer-01-rgb) / <alpha-value>)");
   });
 
-  test("is requireable and well-formed", async () => {
-    const mod = await import(new URL("../dist/tailwind-preset.js", import.meta.url).href);
-    const theme = (mod.default ?? mod).theme.extend;
-    expect(Object.keys(theme.colors).length).toBeGreaterThan(ROLE_NAMES.length);
-    expect(theme.screens.lg).toBe("66rem");
+  /*
+   * Loaded through node, not bun, and through the package's export subpath
+   * rather than a relative file URL — because that is precisely what a
+   * Tailwind 3 config does: `presets: [require("@tyandor/tokens/tailwind-preset")]`.
+   *
+   * The previous version of this test used `await import()` from bun and
+   * passed for two years' worth of the file being broken. This package is
+   * "type": "module", so node parsed the then-.js preset as ESM and handed
+   * require() an empty object — no error, no warning, every token class
+   * silently resolving to nothing. Bun's loader is lenient about CommonJS in
+   * a .js file and papered straight over it. Testing the real runtime is the
+   * only version of this test that can fail.
+   */
+  test("node can require() it through the package export — the Tailwind 3 path", () => {
+    const root = new URL("../../../", import.meta.url);
+    const probe = `
+      const preset = require("@tyandor/tokens/tailwind-preset");
+      process.stdout.write(JSON.stringify({
+        colors: Object.keys(preset.theme.extend.colors).length,
+        lg: preset.theme.extend.screens.lg,
+      }));
+    `;
+    const proc = Bun.spawnSync(["node", "-e", probe], { cwd: root.pathname });
+
+    expect(proc.stderr.toString().trim(), "node require() must not error").toBe("");
+    expect(proc.exitCode).toBe(0);
+
+    const theme = JSON.parse(proc.stdout.toString());
+    expect(theme.colors, "an empty preset is the failure mode this guards").toBeGreaterThan(
+      ROLE_NAMES.length,
+    );
+    expect(theme.lg).toBe("66rem");
+  });
+
+  /*
+   * Adding the preset must not change what a class the consumer already uses
+   * means. Carbon numbers spacing 01–13 and Tailwind numbers its own scale
+   * 0–96; they collide at 10/11/12, where Carbon says 64/80/96px and Tailwind
+   * says 40/44/48px. Emitting bare keys silently doubled `h-10`, `p-12` and
+   * `mt-12` — no error, just a site that reflows. Hence the `ty-` prefix, and
+   * hence this test, which compares a resolved Tailwind config with and
+   * without the preset rather than restating the scale.
+   *
+   * The allow-list below is the line between the two cases. A redefinition is
+   * fine where the design system legitimately owns the concept and keeps its
+   * meaning — `screens` are Carbon's grid, `font-mono` is iA Writer Mono, and
+   * a consumer adopting the preset is adopting both on purpose. It is not fine
+   * where a name silently comes to mean something else, which is what
+   * spacing 10/11/12 did. Anything new showing up here is an oversight until
+   * someone decides otherwise and writes down which of the two it is.
+   */
+  test("redefines no key Tailwind already defines, except screens", () => {
+    // Run from packages/tokens, not the workspace root: apps/docs pulls
+    // Tailwind 4 to the hoisted root, and this preset is the Tailwind 3
+    // artifact. The v3 copy is this package's own devDependency, nested here.
+    const root = new URL("../", import.meta.url);
+    const probe = `
+      const resolve = require("tailwindcss/resolveConfig");
+      const preset  = require("@tyandor/tokens/tailwind-preset");
+      const before  = resolve({ content: [] });
+      const after   = resolve({ content: [], presets: [preset] });
+      const clashes = [];
+      for (const section of Object.keys(before.theme)) {
+        const b = before.theme[section], a = after.theme[section];
+        if (!b || typeof b !== "object") continue;
+        for (const key of Object.keys(b)) {
+          if (JSON.stringify(a[key]) !== JSON.stringify(b[key])) clashes.push(section + "." + key);
+        }
+      }
+      process.stdout.write(JSON.stringify(clashes));
+    `;
+    // tailwindcss is not a dependency of this package; skip rather than fail
+    // if no consumer in the workspace has pulled it in.
+    const has = Bun.spawnSync(["node", "-e", "require.resolve('tailwindcss/resolveConfig')"], {
+      cwd: root.pathname,
+    });
+    if (has.exitCode !== 0) return;
+
+    const proc = Bun.spawnSync(["node", "-e", probe], { cwd: root.pathname });
+    expect(proc.stderr.toString().trim()).toBe("");
+
+    const owned = new Set([
+      "screens.sm", // Carbon's breakpoints, adopted deliberately.
+      "screens.md",
+      "screens.lg",
+      "maxWidth.screen-sm", // Tailwind derives these from screens.
+      "maxWidth.screen-md",
+      "maxWidth.screen-lg",
+      "fontFamily.mono", // font-mono means iA Writer Mono here. Same concept.
+    ]);
+
+    const clashes: string[] = JSON.parse(proc.stdout.toString());
+    expect(clashes.filter((k) => !owned.has(k))).toEqual([]);
   });
 });
 

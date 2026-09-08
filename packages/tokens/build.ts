@@ -1,7 +1,7 @@
 /**
  * Emits the three dist artifacts (PLAN.md 1e):
  *   tokens.css          — :root / [data-theme] custom properties
- *   tailwind-preset.js   — Tailwind 3 preset (verified against 4's @theme too)
+ *   tailwind-preset.cjs — Tailwind 3 preset (verified against 4's @theme too)
  *   tokens.json          — machine-readable bridge for nvim/terminal generators
  *
  * Plain TS on purpose. style-dictionary buys us nothing here that 200 lines
@@ -95,9 +95,22 @@ function buildCss(): string {
  *
  * MCRN (dark) is the default theme. Earth (light) applies when the visitor
  * has no explicit preference and their system asks for light, or whenever
- * [data-theme="earth"] is set. An explicit data-theme always wins: the
- * media-query block is scoped to :root:not([data-theme]), so it simply does
- * not match once a choice has been made.
+ * the earth theme is selected.
+ *
+ * A theme may be selected two ways, and both are first-class: the
+ * [data-theme] attribute, or the .ty-theme-* class. The class form exists
+ * because next-themes — the switcher most consumers reach for — writes a
+ * class by default.
+ *
+ * An explicit choice always wins, whichever form it takes. That is what the
+ * three :not() clauses on the media block are for, and they are load-bearing
+ * rather than defensive: :root:not([data-theme]) is specificity (0,2,0) —
+ * :not() contributes its argument — while .ty-theme-mcrn is only (0,1,0).
+ * Guarding on the attribute alone would let the media block outrank a class
+ * selection, so a visitor on a light-preferring OS who explicitly picked
+ * MCRN would be served Earth. Disarming the block is the fix; raising the
+ * class's specificity to beat it would not be, because the block would still
+ * match and every future token added to one and not the other would drift.
  */
 
 :root {
@@ -107,7 +120,7 @@ ${staticVars()}
 }
 
 @media (prefers-color-scheme: light) {
-  :root:not([data-theme]) {
+  :root:not([data-theme]):not(.ty-theme-earth):not(.ty-theme-mcrn) {
 ${colorVars("earth", "    ")}
   }
 }
@@ -163,7 +176,15 @@ function buildPreset(): string {
     theme: {
       extend: {
         colors,
-        spacing: Object.fromEntries(spacingOrder.map((k) => [k, spacing[k]])),
+        // Namespaced `ty-`, so `p-ty-05`, `gap-ty-06`. Carbon numbers its
+        // spacing 01–13 and Tailwind numbers its own scale 0–96, and the two
+        // overlap at 10, 11 and 12 — where Carbon means 64/80/96px and
+        // Tailwind means 40/44/48px. Emitting the bare keys silently
+        // redefined `h-10`, `p-12`, `mt-12` and friends for every consumer,
+        // including the shadcn control heights that are exactly h-10/h-11.
+        // Nothing errors; the spacing just doubles. Tailwind derives height,
+        // minHeight and maxWidth from spacing, so the prefix fixes those too.
+        spacing: Object.fromEntries(spacingOrder.map((k) => [`ty-${k}`, spacing[k]])),
         screens: Object.fromEntries(Object.entries(breakpoints).map(([k, v]) => [k, v])),
         fontFamily: {
           body: ["var(--ty-font-body)"],
@@ -197,6 +218,12 @@ function buildPreset(): string {
  * Tailwind 3:  presets: [require('@tyandor/tokens/tailwind-preset')]
  * Tailwind 4:  import the CSS and map with @theme; this file still works
  *              via @config for projects mid-migration.
+ *
+ * The .cjs extension is load-bearing. This package is "type": "module", so a
+ * plain .js file here would be parsed as ESM, and Node's require() would hand
+ * Tailwind an empty object instead of throwing — every token class would then
+ * resolve to nothing, silently. .cjs is CommonJS regardless of the package
+ * type field, which is what a Tailwind 3 config's require() needs.
  */
 module.exports = ${JSON.stringify(preset, null, 2)};
 `;
@@ -238,7 +265,7 @@ function buildJson(): string {
 await mkdir(OUT, { recursive: true });
 const outputs: Array<[string, string]> = [
   ["tokens.css", buildCss()],
-  ["tailwind-preset.js", buildPreset()],
+  ["tailwind-preset.cjs", buildPreset()],
   ["tokens.json", buildJson()],
 ];
 

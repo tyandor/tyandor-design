@@ -38,20 +38,60 @@ module.exports = {
 </div>
 ```
 
+### What the preset changes in an existing Tailwind 3 project
+
+Spacing utilities are namespaced — `p-ty-05`, `gap-ty-06`, `h-ty-07`. Carbon
+numbers its spacing 01–13 and Tailwind numbers its own scale 0–96; they
+overlap at 10, 11 and 12, where Carbon means 64/80/96px and Tailwind means
+40/44/48px. Emitting the bare numbers would silently redefine `h-10`, `p-12`
+and `mt-12` for every consumer — no error, just a site that reflows.
+
+Two things the preset *does* redefine, on purpose:
+
+| | Was | Becomes |
+|---|---|---|
+| `screens.sm/md/lg` | 640/768/1024px | 20/42/66rem — Carbon's breakpoints |
+| `font-mono` | Tailwind's mono stack | iA Writer Mono |
+
+Both keep their meaning; they just become the system's. Breakpoints are the
+one to check when adopting the preset in a project that already has layout —
+`sm:` firing at 320px instead of 640px is a real change. A test asserts this
+list stays exactly this short.
+
 No `dark:` variants anywhere. Every class resolves through a custom property, so
 switching `data-theme` reskins the tree with no re-render.
 
 ## Theming
 
 MCRN is the default. Earth applies when the visitor has expressed no preference
-and their system asks for light, or whenever `data-theme="earth"` is set:
+and their system asks for light, or whenever the earth theme is selected.
+
+Either form works, and both are first-class:
 
 ```html
-<html data-theme="earth">
+<html data-theme="earth">        <!-- attribute -->
+<html class="ty-theme-earth">    <!-- class -->
 ```
 
-An explicit `data-theme` always wins — the `prefers-color-scheme` block is scoped
-to `:root:not([data-theme])`, so it stops matching once a choice exists.
+The class form matters because `next-themes` — the switcher most React
+consumers reach for — writes a class by default:
+
+```jsx
+<ThemeProvider
+  attribute="class"
+  defaultTheme="system"
+  enableSystem
+  value={{ light: "ty-theme-earth", dark: "ty-theme-mcrn" }}
+/>
+```
+
+An explicit choice always wins, whichever form it takes. The
+`prefers-color-scheme` block is scoped to
+`:root:not([data-theme]):not(.ty-theme-earth):not(.ty-theme-mcrn)`, so it stops
+matching the moment a choice exists. All three clauses are load-bearing:
+`:not()` contributes its argument's specificity, so `:root:not([data-theme])`
+alone would outrank a bare `.ty-theme-mcrn` and quietly serve Earth to someone
+on a light-preferring OS who had explicitly asked for MCRN.
 
 ## Token groups
 
@@ -65,7 +105,7 @@ to `:root:not([data-theme])`, so it stops matching once a choice exists.
 | Support | `--ty-support-error/warning/success/info` | |
 | Accents | `--ty-accent-amber` … `--ty-accent-void` | **Expressive use only** — charts, syntax, labels. Never UI chrome. |
 | Charts | `--ty-chart-01` … `--ty-chart-06` | Pre-ordered for hue separation |
-| Spacing | `--ty-spacing-01` … `-13` | Carbon scale, 2–160px |
+| Spacing | `--ty-spacing-01` … `-13` | Carbon scale, 2–160px. Tailwind utilities are `p-ty-05` etc. |
 | Type | `--ty-body-01-size`, `--ty-heading-04-line-height`, … | |
 | Motion | `--ty-duration-*`, `--ty-easing-*` | |
 
@@ -77,7 +117,7 @@ channels, which is what makes Tailwind opacity modifiers (`bg-layer-01/50`) work
 | File | For |
 |---|---|
 | `dist/tokens.css` | Browsers. The runtime contract. |
-| `dist/tailwind-preset.js` | Tailwind 3 (and 4 via `@config`). |
+| `dist/tailwind-preset.cjs` | Tailwind 3 (and 4 via `@config`). |
 | `dist/tokens.json` | Non-JS consumers — nvim, terminal, and Ghostty theme generators. |
 
 ## Development
